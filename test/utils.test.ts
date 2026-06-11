@@ -7,6 +7,7 @@ import {
   decodeScreenshot,
   mergeHeaders,
   normalizeHeaders,
+  ZyteConfigurationError,
 } from "../src/index.ts";
 
 test("createBasicAuthHeader encodes the API key as basic auth username", () => {
@@ -14,7 +15,7 @@ test("createBasicAuthHeader encodes the API key as basic auth username", () => {
 });
 
 test("createBasicAuthHeader rejects an empty API key", () => {
-  assert.throws(() => createBasicAuthHeader("  "), /non-empty Zyte API key/);
+  assert.throws(() => createBasicAuthHeader("  "), ZyteConfigurationError);
 });
 
 test("normalizeHeaders lower-cases names and skips empty or nullish values", () => {

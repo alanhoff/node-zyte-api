@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import { readFile, writeFile } from "node:fs/promises";
-import { isDeepStrictEqual } from "node:util";
 
 const SPEC_PATH = new URL("../openapi/zyte-openapi.json", import.meta.url);
 const OUTPUT_PATH = new URL("../src/generated/openapi-types.ts", import.meta.url);
@@ -303,12 +302,23 @@ function render(spec) {
   ].join("\n")}\n`;
 }
 
+async function readCurrentOutput() {
+  try {
+    return await readFile(OUTPUT_PATH, "utf8");
+  } catch (error) {
+    if (isRecord(error) && error.code === "ENOENT") {
+      return "";
+    }
+    throw error;
+  }
+}
+
 const spec = JSON.parse(await readFile(SPEC_PATH, "utf8"));
 const output = render(spec);
 
 if (process.argv.includes("--check")) {
-  const current = await readFile(OUTPUT_PATH, "utf8").catch(() => "");
-  if (!isDeepStrictEqual(current, output)) {
+  const current = await readCurrentOutput();
+  if (current !== output) {
     throw new Error("Generated OpenAPI types are stale. Run npm run generate:types.");
   }
   console.log("Generated OpenAPI types are up to date.");

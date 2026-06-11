@@ -1,4 +1,5 @@
 import { Buffer } from "node:buffer";
+import { ZyteConfigurationError } from "./errors.ts";
 
 export type HeaderRecord = Readonly<Record<string, string>>;
 export type DecodedBinary = Uint8Array & {
@@ -10,7 +11,7 @@ export type HeaderInit = HeaderRecord | ReadonlyArray<readonly [string, HeaderVa
 export function createBasicAuthHeader(apiKey: string): string {
   const key = apiKey.trim();
   if (!key) {
-    throw new Error("A non-empty Zyte API key is required.");
+    throw new ZyteConfigurationError("A non-empty Zyte API key is required.");
   }
   return `Basic ${Buffer.from(`${key}:`, "utf8").toString("base64")}`;
 }

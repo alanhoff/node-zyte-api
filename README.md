@@ -7,7 +7,7 @@ A Node.js-only TypeScript client for Zyte API `POST /v1/extract`.
 - Build output is the only transpiled JavaScript.
 - No runtime dependencies.
 - Full `/extract` request/response type coverage generated from the official Zyte OpenAPI 3.0.3 spec.
-- Pluggable HTTP transport with native `fetch` fallback.
+- Pluggable HTTP transport with native `fetch` as the default.
 
 Official API reference used for the schema: <https://docs.zyte.com/zyte-api/usage/reference.html>.
 
@@ -39,10 +39,9 @@ console.log(decodeHttpResponseBody(response)?.toString("utf8"));
 Use a custom transport to plug in your own HTTP stack, observability, retry policy, proxy handling, or test double.
 
 ```ts
-import { ZyteClient, type ZyteHttpTransport } from "zyte-api";
+import { headersToRecord, ZyteClient, type ZyteHttpTransport } from "zyte-api";
 
 const transport: ZyteHttpTransport = async (request) => {
-  // Bridge request to undici, got, node:http, a test fake, or your own client.
   const response = await fetch(request.url, {
     method: request.method,
     headers: request.headers,
@@ -53,7 +52,7 @@ const transport: ZyteHttpTransport = async (request) => {
   return {
     status: response.status,
     statusText: response.statusText,
-    headers: Object.fromEntries(response.headers),
+    headers: headersToRecord(response.headers),
     body: await response.text(),
   };
 };
@@ -109,7 +108,7 @@ The root export also includes configuration helpers (`normalizeBaseUrl`, `normal
 
 - `ZyteApiError`: non-2xx response or invalid success JSON. Exposes `status`, `problem`, and `response`.
 - `ZyteTransportError`: underlying HTTP transport rejected.
-- `ZyteConfigurationError`: invalid API key, URL, endpoint, timeout, or missing fetch fallback.
+- `ZyteConfigurationError`: invalid API key, URL, endpoint, timeout, or missing native `fetch`.
 
 ## Development
 

@@ -76,7 +76,7 @@ test("ZyteClient applies defaults and supports URL base objects", async () => {
   assert.equal(requests[0]?.signal, undefined);
 });
 
-test("ZyteClient handles non-problem API errors with status fallback messages", async () => {
+test("ZyteClient handles non-problem API errors with default status messages", async () => {
   const withStatusText = new ZyteClient({
     apiKey: "secret",
     transport: async () => ({ body: "nope", headers: {}, status: 429, statusText: "Too Many" }),
@@ -203,7 +203,7 @@ test("ZyteClient rejects paths that resolve outside the configured base path", a
   );
 });
 
-test("ZyteClient falls back to global fetch", async (t) => {
+test("ZyteClient uses global fetch by default", async (t) => {
   const calls: RequestInit[] = [];
   t.mock.method(globalThis, "fetch", (async (
     _input: Parameters<typeof fetch>[0],

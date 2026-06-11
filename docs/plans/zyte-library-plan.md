@@ -18,7 +18,7 @@ Create a fully fledged, clean Node.js TypeScript package for Zyte API `POST /v1/
 
 ### Decision drivers
 - User requires native TS and Node built-ins during development.
-- User requires pluggable underlying HTTP library with native fetch fallback.
+- User requires a pluggable underlying HTTP library with native fetch as the default.
 - Full `/extract` schema coverage is more important than runtime validation.
 - Strict TS and coverage gates must be enforceable locally.
 
@@ -56,7 +56,7 @@ Create a fully fledged, clean Node.js TypeScript package for Zyte API `POST /v1/
 
 ## Public API
 - `ZyteClient` class with:
-  - constructor accepting `{ apiKey, baseUrl?, endpoint?, transport?, defaultHeaders?, userAgent?, timeoutMs? }`.
+  - constructor accepting `{ apiKey, baseUrl?, endpoint?, transport?, defaultHeaders?, userAgent?, timeoutMs?, allowInsecureHttp? }`.
   - `extract(request, options?)` for `POST /extract`.
   - `request(path, payload, options?)` lower-level method for future expansion without exposing internals.
 - Type exports:
@@ -122,7 +122,7 @@ Create a fully fledged, clean Node.js TypeScript package for Zyte API `POST /v1/
    - `src/utils.ts`: base64 and header helpers.
    - `src/index.ts`: public exports.
 5. Write tests with `node:test` directly against TypeScript source:
-   - client request construction, default fetch fallback, custom transport usage.
+   - client request construction, default fetch transport, custom transport usage.
    - Basic auth and default/custom headers.
    - non-2xx problem parsing and error surface.
    - invalid JSON / transport failures.
@@ -158,7 +158,7 @@ Independent code review returned REQUEST CHANGES and Architect returned WATCH. R
    - Reject absolute URLs in `endpoint` and `request(path, ...)` so Basic auth cannot be sent to an origin outside `baseUrl` by accident.
    - Add regression tests for constructor `endpoint: "https://evil.example/capture"` and `client.request("https://evil.example/capture", ...)`.
 2. Typed configuration errors:
-   - Make missing native fetch fallback throw `ZyteConfigurationError`, matching README/plan contract.
+   - Make missing native `fetch` throw `ZyteConfigurationError`, matching README/plan contract.
    - Add test coverage for `createFetchTransport(null)` typed error.
 3. Insecure HTTP handling:
    - Default to HTTPS-only for authenticated requests.
