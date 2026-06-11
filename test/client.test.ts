@@ -72,7 +72,7 @@ test("ZyteClient applies defaults and supports URL base objects", async () => {
   await client.extract({ browserHtml: true, url: "https://example.com/" });
 
   assert.equal(String(requests[0]?.url), "https://api.example.test/v1/extract");
-  assert.equal(requests[0]?.headers["user-agent"], "zyte-client/0.1.0");
+  assert.equal(requests[0]?.headers["user-agent"], "zyte-api/0.1.0");
   assert.equal(requests[0]?.signal, undefined);
 });
 

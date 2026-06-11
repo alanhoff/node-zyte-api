@@ -1,4 +1,4 @@
-# zyte-client
+# zyte-api
 
 A Node.js-only TypeScript client for Zyte API `POST /v1/extract`.
 
@@ -14,13 +14,13 @@ Official API reference used for the schema: <https://docs.zyte.com/zyte-api/usag
 ## Install
 
 ```sh
-npm install zyte-client
+npm install zyte-api
 ```
 
 ## Quick start
 
 ```ts
-import { ZyteClient, decodeHttpResponseBody } from "zyte-client";
+import { ZyteClient, decodeHttpResponseBody } from "zyte-api";
 
 const client = new ZyteClient({ apiKey: process.env.ZYTE_API_KEY ?? "" });
 
@@ -39,7 +39,7 @@ console.log(decodeHttpResponseBody(response)?.toString("utf8"));
 Use a custom transport to plug in your own HTTP stack, observability, retry policy, proxy handling, or test double.
 
 ```ts
-import { ZyteClient, type ZyteHttpTransport } from "zyte-client";
+import { ZyteClient, type ZyteHttpTransport } from "zyte-api";
 
 const transport: ZyteHttpTransport = async (request) => {
   // Bridge request to undici, got, node:http, a test fake, or your own client.
