@@ -1,0 +1,3990 @@
+{
+  "components": {
+    "schemas": {
+      "Action": {
+        "description": "Action to perform.",
+        "example": {
+          "action": "click",
+          "selector": {
+            "type": "css",
+            "value": "#main"
+          }
+        },
+        "properties": {
+          "onError": {
+            "$ref": "#/components/schemas/onError"
+          }
+        },
+        "type": "object"
+      },
+      "ActionResult": {
+        "description": "Returns detailed information about the elapsed time and errors for a particular action.\n",
+        "properties": {
+          "action": {
+            "description": "The type of action submitted",
+            "example": "waitForSelector",
+            "type": "string"
+          },
+          "elapsedTime": {
+            "description": "Elapsed time in seconds",
+            "type": "number"
+          },
+          "error": {
+            "description": "Detailed information about the underlying error.",
+            "example": "Request timeout while waiting for selector '#form-input'",
+            "type": "string"
+          },
+          "interactionLogs": {
+            "description": "Messages logged with `console.log()` from\n[browser scripts](https://docs.zyte.com/zyte-api/ide/index.html#zapi-scripts).\n",
+            "items": {
+              "$ref": "#/components/schemas/InteractionLogEntry"
+            },
+            "type": "array"
+          },
+          "status": {
+            "description": "Status of execution of a particular action\n* success - When the action finishes execution successfully without any errors\n* continued - When the action fails, but the execution of the action sequence is continued\n* returned - When the action fails and stops execution\n* notExecuted - When a a prior action has failed, thereby not executing the current action\n",
+            "enum": ["success", "continued", "returned", "notExecuted"],
+            "example": "success",
+            "type": "string"
+          }
+        },
+        "required": ["action", "elapsedTime", "status"],
+        "type": "object"
+      },
+      "ActionSelector": {
+        "description": "A CSS or XPath selector to search for an element.\n",
+        "properties": {
+          "state": {
+            "default": "visible",
+            "description": "State can be either of the following values and defaults to visible\n* 'visible' - The element has a non-empty bounding box and no visibility:hidden. Note that an element without content or with display:none has an empty bounding box, and is not considered visible.\n* 'hidden' - The element is either detached from the DOM, or has an empty bounding box or visibility:hidden.\nThis is the opposite of the 'visible' option.\n* 'attached' - The element is present in the DOM; it can be visible or hidden\n",
+            "enum": ["attached", "visible", "hidden"],
+            "type": "string"
+          },
+          "type": {
+            "description": "The type of selector - CSS or XPath",
+            "enum": ["css", "xpath"],
+            "type": "string"
+          },
+          "value": {
+            "maxLength": 500,
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": ["type", "value"]
+      },
+      "ActionSequence": {
+        "description": "Sequence of browser actions to execute.\n\nSelect an action below to see its API reference.\n\nWhen using actions, you get the\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/actions)\nresponse field with debug information about action execution.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-actions).\n",
+        "items": {
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/click"
+            },
+            {
+              "$ref": "#/components/schemas/doubleClick"
+            },
+            {
+              "$ref": "#/components/schemas/evaluate"
+            },
+            {
+              "$ref": "#/components/schemas/goto"
+            },
+            {
+              "$ref": "#/components/schemas/hide"
+            },
+            {
+              "$ref": "#/components/schemas/hover"
+            },
+            {
+              "$ref": "#/components/schemas/interaction"
+            },
+            {
+              "$ref": "#/components/schemas/keyPress"
+            },
+            {
+              "$ref": "#/components/schemas/reload"
+            },
+            {
+              "$ref": "#/components/schemas/scrollBottom"
+            },
+            {
+              "$ref": "#/components/schemas/scrollTo"
+            },
+            {
+              "$ref": "#/components/schemas/searchKeyword"
+            },
+            {
+              "$ref": "#/components/schemas/select"
+            },
+            {
+              "$ref": "#/components/schemas/setLocation"
+            },
+            {
+              "$ref": "#/components/schemas/type"
+            },
+            {
+              "$ref": "#/components/schemas/waitForNavigation"
+            },
+            {
+              "$ref": "#/components/schemas/waitForRequest"
+            },
+            {
+              "$ref": "#/components/schemas/waitForResponse"
+            },
+            {
+              "$ref": "#/components/schemas/waitForSelector"
+            },
+            {
+              "$ref": "#/components/schemas/waitForTimeout"
+            }
+          ]
+        },
+        "type": "array"
+      },
+      "ActionTimeout": {
+        "default": 5,
+        "description": "Maximum wait time in seconds.",
+        "maximum": 15,
+        "minimum": 0,
+        "type": "number"
+      },
+      "AdditionalProperty": {
+        "description": "Additional propertiy or characteristics.\n\n* name field contains the property name,\n* value field contains the property value.\n\n![](https://docs.zyte.com/_static/images/schemas/product_info.png)\n",
+        "example": {
+          "name": "batteries",
+          "value": "1 Lithium ion batteries required. (included)"
+        },
+        "properties": {
+          "name": {
+            "description": "Property name.",
+            "type": "string"
+          },
+          "value": {
+            "description": "Property value.",
+            "type": "string"
+          }
+        },
+        "required": ["name"],
+        "type": "object"
+      },
+      "Article": {
+        "properties": {
+          "articleBody": {
+            "description": "Clean text of the article, including sub-headings, with newline separators.\n",
+            "example": "Article body ...",
+            "type": "string"
+          },
+          "articleBodyHtml": {
+            "description": "Simplified and standardized HTML of the article body, including sub-headings,\nimage captions and embedded content (videos, tweets, etc.).\n",
+            "example": "<article><p>Article body ... </p> ... </article>",
+            "type": "string"
+          },
+          "audios": {
+            "description": "A list of all audios inside the article body.",
+            "items": {
+              "properties": {
+                "url": {
+                  "description": "Absolute URL of the audio.",
+                  "example": "https://example.com/audio.mp3",
+                  "type": "string"
+                }
+              },
+              "required": ["url"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "authors": {
+            "description": "Authors of the article.",
+            "example": [
+              {
+                "name": "Alice",
+                "nameRaw": "Alice and Bob"
+              },
+              {
+                "name": "Bob",
+                "nameRaw": "Alice and Bob"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/Author"
+            },
+            "type": "array"
+          },
+          "breadcrumbs": {
+            "description": "A list of breadcrumbs (a specific navigation element)\nwith optional `name` and `url`.\n",
+            "example": [
+              {
+                "name": "Home",
+                "url": "https://example.com/"
+              },
+              {
+                "name": "Cell Phones",
+                "url": "https://example.com/cell-phones"
+              },
+              {
+                "name": "Cell Phones & Accessories"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/Breadcrumb"
+            },
+            "type": "array"
+          },
+          "canonicalUrl": {
+            "description": "Canonical URL of the article, if available.",
+            "example": "https://example.com/article",
+            "type": "string"
+          },
+          "dateModified": {
+            "description": "The date when the article was most recently modified.\nISO-formatted with 'T' separator, may contain a timezone.\n",
+            "example": "2019-06-21T00:00:00",
+            "type": "string"
+          },
+          "dateModifiedRaw": {
+            "description": "Same date as \"dateModified\", but before parsing/normalization, i.e. as\nit appears on the website.\n",
+            "example": "June 21, 2019",
+            "type": "string"
+          },
+          "datePublished": {
+            "description": "Publication date. ISO-formatted with 'T' separator, may contain a timezone.\nIf the actual publication date is not found, \"dateModified\" value is taken.\n",
+            "example": "2019-06-19T00:00:00",
+            "type": "string"
+          },
+          "datePublishedRaw": {
+            "description": "Same date as \"datePublished\", but before parsing/normalization, i.e. as\nit appears on the website.\n",
+            "example": "June 19, 2019",
+            "type": "string"
+          },
+          "description": {
+            "description": "A short summary of the article. It can be either human-provided\n(if available), or auto-generated.\n",
+            "example": "Article summary",
+            "type": "string"
+          },
+          "headline": {
+            "description": "Article headline or title.",
+            "example": "Article headline",
+            "type": "string"
+          },
+          "images": {
+            "description": "All images of the item (may include the main image).",
+            "items": {
+              "$ref": "#/components/schemas/Image"
+            },
+            "type": "array"
+          },
+          "inLanguage": {
+            "description": "Language of the article, as an ISO 639-1 language code. Example: \"en\".\nSometimes article language is not the same as the web page overall\nlanguage; to get the detected web page languages,\nsee \"webPageInfo\".\n",
+            "example": "en",
+            "type": "string"
+          },
+          "mainImage": {
+            "$ref": "#/components/schemas/Image",
+            "description": "The main image of the item."
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/schemas-Metadata"
+          },
+          "url": {
+            "description": "URL of a page where this article was extracted.",
+            "example": "https://example.com/article/",
+            "type": "string"
+          },
+          "videos": {
+            "description": "A list of all videos inside the article body.",
+            "items": {
+              "properties": {
+                "url": {
+                  "description": "Absolute URL of the video.",
+                  "example": "https://example.com/video.mp4",
+                  "type": "string"
+                }
+              },
+              "required": ["url"],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": ["url", "metadata"],
+        "type": "object"
+      },
+      "ArticleList": {
+        "properties": {
+          "articles": {
+            "description": "List of articles available on this page.",
+            "items": {
+              "properties": {
+                "articleBody": {
+                  "description": "Text of the article as it appears on the list page,\nincluding sub-headings, with newline separators.\n",
+                  "example": "Article body ...",
+                  "type": "string"
+                },
+                "authors": {
+                  "description": "Authors of the article.",
+                  "example": [
+                    {
+                      "name": "Alice",
+                      "nameRaw": "Alice and Bob"
+                    },
+                    {
+                      "name": "Bob",
+                      "nameRaw": "Alice and Bob"
+                    }
+                  ],
+                  "items": {
+                    "$ref": "#/components/schemas/Author"
+                  },
+                  "type": "array"
+                },
+                "datePublished": {
+                  "description": "Publication date. ISO-formatted with 'T' separator, may contain a timezone.\n",
+                  "example": "2019-06-19T00:00:00",
+                  "type": "string"
+                },
+                "datePublishedRaw": {
+                  "description": "Same date as \"datePublished\", but before parsing/normalization, i.e. as\nit appears on the website.\n",
+                  "example": "June 19, 2019",
+                  "type": "string"
+                },
+                "headline": {
+                  "description": "Article headline or title.",
+                  "example": "Article headline",
+                  "type": "string"
+                },
+                "images": {
+                  "description": "All images of the item (may include the main image).",
+                  "items": {
+                    "$ref": "#/components/schemas/Image"
+                  },
+                  "type": "array"
+                },
+                "inLanguage": {
+                  "description": "Language of the article, as an ISO 639-1 language code. Example: \"en\".\nSometimes article language is not the same as the web page overall\nlanguage; to get the detected web page languages,\nsee \"webPageInfo\".\n",
+                  "example": "en",
+                  "type": "string"
+                },
+                "mainImage": {
+                  "$ref": "#/components/schemas/Image",
+                  "description": "The main image of the item."
+                },
+                "metadata": {
+                  "$ref": "#/components/schemas/MetadataListItem"
+                },
+                "url": {
+                  "description": "URL of a detailed article page.\nPass this URL with \"article: true\" in the request to\nextract detailed information about the article.\n",
+                  "example": "https://example.com/articles/1/",
+                  "type": "string"
+                }
+              },
+              "required": ["metadata"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataList"
+          },
+          "url": {
+            "description": "URL of a page where this article list was extracted.",
+            "example": "https://example.com/articles/",
+            "type": "string"
+          }
+        },
+        "required": ["url", "metadata"],
+        "type": "object"
+      },
+      "ArticleNavigation": {
+        "properties": {
+          "items": {
+            "description": "List of articles available on this page.",
+            "items": {
+              "properties": {
+                "datePublished": {
+                  "description": "Publication date. ISO-formatted with 'T' separator, may contain a timezone.\n",
+                  "example": "2019-06-19T00:00:00",
+                  "type": "string"
+                },
+                "datePublishedRaw": {
+                  "description": "Same date as \"datePublished\", but before parsing/normalization, i.e. as\nit appears on the website.\n",
+                  "example": "June 19, 2019",
+                  "type": "string"
+                },
+                "metadata": {
+                  "$ref": "#/components/schemas/MetadataListItem"
+                },
+                "name": {
+                  "description": "The name of the article or article link text.",
+                  "example": "Article name",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "URL of a detailed article page.\nPass this URL with \"article: true\" in the request to\nextract detailed information about the article.\n",
+                  "example": "https://example.com/articles/1/",
+                  "type": "string"
+                }
+              },
+              "required": ["url", "metadata"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataList"
+          },
+          "nextPage": {
+            "$ref": "#/components/schemas/PaginationNext"
+          },
+          "pageNumber": {
+            "$ref": "#/components/schemas/PageNumber"
+          },
+          "url": {
+            "description": "URL of a page containing the list of articles.",
+            "example": "https://example.com/articles/",
+            "type": "string"
+          }
+        },
+        "required": ["url", "metadata"],
+        "type": "object"
+      },
+      "Author": {
+        "description": "Author of the article.",
+        "example": {
+          "name": "Alice",
+          "nameRaw": "Alice and Bob"
+        },
+        "properties": {
+          "name": {
+            "description": "Full name of the author, e.g. \"Alice\".",
+            "type": "string"
+          },
+          "nameRaw": {
+            "description": "Text from which this author name was extracted, e.g. \"Alice and Bob\".",
+            "type": "string"
+          }
+        },
+        "required": ["name"],
+        "type": "object"
+      },
+      "Availability": {
+        "description": "Availability, as a string. Allowed values:\n\n  * `\"InStock\"` - includes limited availability, presale,\n    preorder, and in-store only.\n  * `\"OutOfStock\"` - includes discontinued and sold out.\n",
+        "enum": ["InStock", "OutOfStock"],
+        "example": "InStock",
+        "type": "string"
+      },
+      "Breadcrumb": {
+        "description": "Breadcrumb item (a specific navigation element) with optional `name` and `url`.\n",
+        "example": {
+          "name": "Home",
+          "url": "https://example.com/"
+        },
+        "properties": {
+          "name": {
+            "description": "Text of the breadcrumb, as it appears on the website.",
+            "type": "string"
+          },
+          "url": {
+            "description": "Absolute URL of the breadcrumb.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "CanonicalUrl": {
+        "description": "Canonical URL of the product, if available.",
+        "example": "https://example.com/product/",
+        "type": "string"
+      },
+      "CapturedResponse": {
+        "properties": {
+          "filter": {
+            "$ref": "#/components/schemas/NetworkCaptureFilter"
+          },
+          "headers": {
+            "description": "Captured response headers.",
+            "type": "object"
+          },
+          "httpResponseBody": {
+            "description": "[Base64](https://en.wikipedia.org/wiki/Base64)-encoded body of the\ncaptured response.\n\nTo get this response field, set the\n[networkCapture[].httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/networkCapture.httpResponseBody)\nrequest field to `true`.\n",
+            "format": "byte",
+            "type": "string"
+          },
+          "interceptionStatus": {
+            "description": "Exit status of the network capture.\n\nIf `interceptionStatus.status` is `error`, `httpResponseBody` is\nnot delivered.\n\nPossible causes of error include all matching responses exceeding\nthe maximum total body size of 5 MiB.\n",
+            "properties": {
+              "error": {
+                "description": "Error message.\n\nThis field is only present if `interceptionStatus.status` is\n`error`.\n",
+                "type": "string"
+              },
+              "status": {
+                "enum": ["success", "error"],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "request": {
+            "description": "Captured request that got the captured response.",
+            "properties": {
+              "body": {
+                "description": "Body of the captured request, if any.",
+                "type": "string"
+              },
+              "headers": {
+                "description": "Headers of the captured request.",
+                "type": "object"
+              },
+              "method": {
+                "description": "HTTP method of the captured request.",
+                "type": "string"
+              },
+              "url": {
+                "description": "URL of the captured request.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "statusCode": {
+            "description": "HTTP status code of the captured response.",
+            "type": "integer"
+          },
+          "url": {
+            "description": "Captured response URL.",
+            "format": "uri",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Color": {
+        "description": "Color of the product.",
+        "example": "Red",
+        "type": "string"
+      },
+      "Cookie": {
+        "properties": {
+          "domain": {
+            "description": "Domain the cookie belongs to",
+            "maxLength": 253,
+            "type": "string"
+          },
+          "expires": {
+            "description": "Unix time in seconds.",
+            "format": "int64",
+            "type": "integer"
+          },
+          "httpOnly": {
+            "type": "boolean"
+          },
+          "name": {
+            "description": "Cookie name",
+            "maxLength": 4085,
+            "type": "string"
+          },
+          "path": {
+            "description": "Path the cookie belongs to",
+            "type": "string"
+          },
+          "sameSite": {
+            "enum": ["Strict", "Lax", "Extended", "None"],
+            "type": "string"
+          },
+          "secure": {
+            "type": "boolean"
+          },
+          "value": {
+            "description": "Cookie value",
+            "maxLength": 4085,
+            "type": "string"
+          }
+        },
+        "required": ["name", "value", "domain"],
+        "type": "object"
+      },
+      "CountryCode": {
+        "description": "[ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)\ncode of a country from which the request should be sent, i.e. the\nrequest\n[geolocation](https://docs.zyte.com/zyte-api/usage/features.html#zapi-geolocation).\n\nIf not specified, Zyte API will use a geolocation that, for the target\nwebsite, does not cause bans or unexpected locale changes in the\nresponse data, such as the wrong language, currency, date format, time\nzone, etc.\n\nIf you believe Zyte API is using the wrong default geolocation for a\nwebsite, please\n[reach out to our expert anti-ban team](https://support.zyte.com/support/tickets/new).\n\nFor some websites, however, you might want to set a custom geolocation.\nFor example, you may be interested in visiting the same URL from\ndifferent locations.\n\nZyte API provides 2 sets of geolocations. Standard geolocations are\n`AU`, `BE`, `BR`, `CA`, `CN`, `DE`, `ES`, `FR`, `GB`, `IN`, `IT`, `JP`,\n`KR`, `MX`, `NL`, `PL`, `RU`, `TR`, `US`, and `ZA`. All other\ngeolocations are\n[extended geolocations](https://docs.zyte.com/zyte-api/usage/features.html#zapi-extended-geolocations).\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-geolocation).\n",
+        "enum": [
+          "AW",
+          "AF",
+          "AO",
+          "AI",
+          "AX",
+          "AL",
+          "AD",
+          "AE",
+          "AR",
+          "AM",
+          "AS",
+          "AQ",
+          "TF",
+          "AG",
+          "AU",
+          "AT",
+          "AZ",
+          "BI",
+          "BE",
+          "BJ",
+          "BQ",
+          "BF",
+          "BD",
+          "BG",
+          "BH",
+          "BS",
+          "BA",
+          "BL",
+          "BY",
+          "BZ",
+          "BM",
+          "BO",
+          "BR",
+          "BB",
+          "BN",
+          "BT",
+          "BV",
+          "BW",
+          "CF",
+          "CA",
+          "CC",
+          "CH",
+          "CL",
+          "CN",
+          "CI",
+          "CM",
+          "CD",
+          "CG",
+          "CK",
+          "CO",
+          "KM",
+          "CV",
+          "CR",
+          "CU",
+          "CW",
+          "CX",
+          "KY",
+          "CY",
+          "CZ",
+          "DE",
+          "DJ",
+          "DM",
+          "DK",
+          "DO",
+          "DZ",
+          "EC",
+          "EG",
+          "ER",
+          "EH",
+          "ES",
+          "EE",
+          "ET",
+          "FI",
+          "FJ",
+          "FK",
+          "FR",
+          "FO",
+          "FM",
+          "GA",
+          "GB",
+          "GE",
+          "GG",
+          "GH",
+          "GI",
+          "GN",
+          "GP",
+          "GM",
+          "GW",
+          "GQ",
+          "GR",
+          "GD",
+          "GL",
+          "GT",
+          "GF",
+          "GU",
+          "GY",
+          "HK",
+          "HM",
+          "HN",
+          "HR",
+          "HT",
+          "HU",
+          "ID",
+          "IM",
+          "IN",
+          "IO",
+          "IE",
+          "IR",
+          "IQ",
+          "IS",
+          "IL",
+          "IT",
+          "JM",
+          "JE",
+          "JO",
+          "JP",
+          "KZ",
+          "KE",
+          "KG",
+          "KH",
+          "KI",
+          "KN",
+          "KR",
+          "KW",
+          "LA",
+          "LB",
+          "LR",
+          "LY",
+          "LC",
+          "LI",
+          "LK",
+          "LS",
+          "LT",
+          "LU",
+          "LV",
+          "MO",
+          "MF",
+          "MA",
+          "MC",
+          "MD",
+          "MG",
+          "MV",
+          "MX",
+          "MH",
+          "MK",
+          "ML",
+          "MT",
+          "MM",
+          "ME",
+          "MN",
+          "MP",
+          "MZ",
+          "MR",
+          "MS",
+          "MQ",
+          "MU",
+          "MW",
+          "MY",
+          "YT",
+          "NA",
+          "NC",
+          "NE",
+          "NF",
+          "NG",
+          "NI",
+          "NU",
+          "NL",
+          "NO",
+          "NP",
+          "NR",
+          "NZ",
+          "OM",
+          "PK",
+          "PA",
+          "PN",
+          "PE",
+          "PH",
+          "PW",
+          "PG",
+          "PL",
+          "PR",
+          "KP",
+          "PT",
+          "PY",
+          "PS",
+          "PF",
+          "QA",
+          "RE",
+          "RO",
+          "RU",
+          "RW",
+          "SA",
+          "SD",
+          "SN",
+          "SG",
+          "GS",
+          "SH",
+          "SJ",
+          "SB",
+          "SL",
+          "SV",
+          "SM",
+          "SO",
+          "PM",
+          "RS",
+          "SS",
+          "ST",
+          "SR",
+          "SK",
+          "SI",
+          "SE",
+          "SZ",
+          "SX",
+          "SC",
+          "SY",
+          "TC",
+          "TD",
+          "TG",
+          "TH",
+          "TJ",
+          "TK",
+          "TM",
+          "TL",
+          "TO",
+          "TT",
+          "TN",
+          "TR",
+          "TV",
+          "TW",
+          "TZ",
+          "UG",
+          "UA",
+          "UM",
+          "UY",
+          "US",
+          "UZ",
+          "VA",
+          "VC",
+          "VE",
+          "VG",
+          "VI",
+          "VN",
+          "VU",
+          "WF",
+          "WS",
+          "YE",
+          "ZA",
+          "ZM",
+          "ZW"
+        ],
+        "example": "US",
+        "type": "string"
+      },
+      "Currency": {
+        "description": "The ISO 4217 standard of the currency in which the price is in.\n",
+        "example": "USD",
+        "pattern": "^[A-Z]{3}$",
+        "type": "string"
+      },
+      "CurrencyRaw": {
+        "description": "The currency as given on the website, without extra normalization (for example, both \"$\" and \"USD\" are possible currencies).\n",
+        "example": "$",
+        "type": "string"
+      },
+      "CustomAttribute": {
+        "discriminator": {
+          "mapping": {
+            "array": "#/components/schemas/CustomAttributeArray",
+            "boolean": "#/components/schemas/CustomAttributeBoolean",
+            "integer": "#/components/schemas/CustomAttributeInteger",
+            "number": "#/components/schemas/CustomAttributeNumber",
+            "object": "#/components/schemas/CustomAttributeObject",
+            "string": "#/components/schemas/CustomAttributeString"
+          },
+          "propertyName": "type"
+        },
+        "properties": {
+          "description": {
+            "maxLength": 300,
+            "type": "string"
+          },
+          "type": {
+            "enum": ["boolean", "string", "number", "integer", "array", "object"],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "CustomAttributeArray": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CustomAttribute"
+          }
+        ],
+        "properties": {
+          "items": {
+            "$ref": "#/components/schemas/CustomAttribute"
+          }
+        },
+        "required": ["type", "items"],
+        "type": "object"
+      },
+      "CustomAttributeBoolean": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CustomAttribute"
+          }
+        ],
+        "required": ["type"],
+        "type": "object"
+      },
+      "CustomAttributeInteger": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CustomAttribute"
+          },
+          {
+            "properties": {
+              "enum": {
+                "items": {
+                  "type": "integer"
+                },
+                "maxItems": 10,
+                "minItems": 2,
+                "type": "array"
+              }
+            }
+          }
+        ],
+        "required": ["type"],
+        "type": "object"
+      },
+      "CustomAttributeNumber": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CustomAttribute"
+          },
+          {
+            "properties": {
+              "enum": {
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 10,
+                "minItems": 2,
+                "type": "array"
+              }
+            }
+          }
+        ],
+        "required": ["type"],
+        "type": "object"
+      },
+      "CustomAttributeObject": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CustomAttribute"
+          }
+        ],
+        "properties": {
+          "properties": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CustomAttribute"
+            },
+            "type": "object"
+          }
+        },
+        "required": ["type", "properties"],
+        "type": "object"
+      },
+      "CustomAttributeString": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CustomAttribute"
+          },
+          {
+            "properties": {
+              "enum": {
+                "items": {
+                  "maxLength": 50,
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "maxItems": 100,
+                "minItems": 2,
+                "type": "array"
+              },
+              "format": {
+                "enum": ["html", "uri", "html-text", "xpath"],
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "required": ["type"]
+      },
+      "CustomHttpRequestHeader": {
+        "properties": {
+          "name": {
+            "example": "X-APOLLO-OPERATION-NAME",
+            "maxLength": 200,
+            "type": "string"
+          },
+          "value": {
+            "example": "nearByNodes",
+            "maxLength": 7000,
+            "type": "string"
+          }
+        }
+      },
+      "DateDownloaded": {
+        "description": "The timestamp at which the data was downloaded.\nTimezone: UTC. Format: ISO 8601 format: \"YYYY-MM-DDThh:mm:ssZ\"\n",
+        "example": "2019-06-19T08:27:43Z",
+        "type": "string"
+      },
+      "ExtractRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "actions": {
+            "$ref": "#/components/schemas/ActionSequence"
+          },
+          "article": {
+            "default": false,
+            "description": "Set to `true` to get article data in the\n[article](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/article)\nresponse field.\n\nThe target page should only contain a single article, such as a\nblog post or a news article. For pages with multiple articles\nconsider using\n[articleList](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/articleList)\ninstead.\n\nTo combine this field with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html),\nset\n[articleOptions.extractFrom](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/articleOptions.extractFrom)\nto `\"httpResponseBody\"`.\n\nIf you use\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions),\ndata extraction happens *after* action execution has finished or\ntimed out.\n\nSee also:\n[List of all automatic extraction request fields](https://docs.zyte.com/zyte-api/usage/extract.html#zapi-extract-fields),\n[articleNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/articleNavigation),\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml),\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "articleList": {
+            "default": false,
+            "description": "Set to `true` to get article list data in the\n[articleList](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/articleList)\nresponse field.\n\nThe target page should contain multiple articles, usually as\nlinks or short snippets. Examples of such pages are main or\ncategory pages of news sites, main pages of blogs showing multiple\nposts, and other pages with multiple articles.\n\nArticle list data is especially useful to get basic information\nabout articles on a website, like a headline and a link to the\narticle details, using a smaller number of requests, when article\nattributes are extracted directly from a article list page, without\nmaking individual\n[article](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/article)\nrequests.\n\nTo implement article crawling from article list pages, use\n[articleNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/articleNavigation),\nwhich also enables navigation through pagination links.\n\nTo combine this field with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html),\nset\n[articleListOptions.extractFrom](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/articleListOptions.extractFrom)\nto `\"httpResponseBody\"`.\n\nIf you use\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions),\ndata extraction happens *after* action execution has finished or\ntimed out.\n\nSee also:\n[List of all automatic extraction request fields](https://docs.zyte.com/zyte-api/usage/extract.html#zapi-extract-fields),\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml),\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "articleListOptions": {
+            "$ref": "#/components/schemas/ExtractionOptions",
+            "description": "Additional options for articleList extraction.\n"
+          },
+          "articleNavigation": {
+            "default": false,
+            "description": "Set to `true` to get article navigation data in the\n[articleNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/articleNavigation)\nresponse field.\n\nThe target page should contain multiple articles and/or\nsubcategories that can be followed.\n\nArticle navigation data is especially useful for implementing\narticle crawling, i.e. following links to article pages, as well as\nto subcategories and pagination that can in turn link to more\narticle pages.\n\nArticle navigation data can also be used to get basic information\nof articles and subcategories on a website, obtaining the URLs and\nlink names of the articles and subcategories, without making\nindividual requests for those articles.\n\nTo combine this field with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html),\nset\n[articleNavigationOptions.extractFrom](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/articleNavigationOptions.extractFrom)\nto `\"httpResponseBody\"`.\n\nIf you use\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions),\ndata extraction happens *after* action execution has finished or\ntimed out.\n\nSee also:\n[List of all automatic extraction request fields](https://docs.zyte.com/zyte-api/usage/extract.html#zapi-extract-fields),\n[article](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/article),\n[articleList](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/articleList),\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml),\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "articleNavigationOptions": {
+            "$ref": "#/components/schemas/ExtractionOptions",
+            "description": "Additional options for articleNavigation extraction.\n"
+          },
+          "articleOptions": {
+            "$ref": "#/components/schemas/ExtractionOptions",
+            "description": "Additional options for article extraction.\n"
+          },
+          "browserHtml": {
+            "default": false,
+            "description": "Set to `true` to get the\n[browser HTML](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-browser-html)\nin the\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/browserHtml)\nresponse field.\n\nThis field is not compatible with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html).\n\nIf you use\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions),\nthe browser HTML is generated *after* action execution has finished\nor timed out.\n\nBy default,\n[iframes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe)\nare empty. See\n[includeIframes](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/includeIframes).\n\nTo access content from the\n[shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM),\ncheck out the corresponding example in the\n[actions documentation](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-actions).\n\n[See an example](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-browser-html).\nSee also:\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "cookieManagement": {
+            "default": "auto",
+            "description": "Cookie management method\n\nIt determines how to handle user cookies, defined through\n[requestCookies](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestCookies),\nand automatic cookies, cookies automatically generated by Zyte API.\n`auto` (default) uses user cookies if defined, or automatic\ncookies otherwise.\n\n`discard` uses user cookies if defined, or no cookies\notherwise.\n",
+            "enum": ["auto", "discard"]
+          },
+          "customAttributes": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/CustomAttribute"
+            },
+            "description": "Schema of the custom attributes to extract. This is a subset of the OpenAPI specification, using JSON syntax.\n\nZyte custom attributes extraction uses a Large Language Model (LLM) operated by Zyte\nto obtain any structured data specified by this schema from any unstructured web page.\nThis allows to perform extraction similar to standard schemas, such as article or product,\nbut much more flexibly.\n\nWhen this field is specified, the\n[customAttributes.values](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/customAttributes.values)\nfield in the response would contain the extracted data.\n\nWhen custom attributes extraction is requested, a standard extraction field must also be\nspecified (e.g. [product](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/product)).\nThis determines the part of the web page which would be passed to the LLM for custom attributes extraction,\ne.g. when a web page is a product, we're only going to pass the product information,\nignoring other parts of the page, such as menu or footer, which makes extraction cheaper and more accurate.\n\n[See detailed documentation](https://docs.zyte.com/zyte-api/usage/custom-attributes.html).\nAdditionally, to see a request example, scroll up to the right-hand sidebar **Request samples**,\nand select \u201cExtract Custom Attributes along with Article information\u201d under **Example**.\n",
+            "maxProperties": 20,
+            "nullable": true,
+            "type": "object"
+          },
+          "customAttributesOptions": {
+            "description": "Additional options for custom attributes extraction.",
+            "properties": {
+              "maxInputTokens": {
+                "description": "Limit on the number of input tokens for custom attribute extraction with the \"generate\" method.\n\nThis includes the schema as well, but not our internal fixed prompt with the LLM instruction.\n\nWhen the number of tokens for schema and page text is above the specified maxInputTokens,\nwe truncate the page text to fit in maxInputTokens.\nThis may result in quality degradation or data not extracted from the page because it was truncated.\n\nTokens are words or word pieces, for example\n``{\"price\": \"2.00 $\"}`` is 9 tokens:\n``{\"``, ``price``, ``\":``, `` \"``, ``2``, ``.``, ``00``, `` $``, ``\"}``.\n",
+                "minimum": 1,
+                "type": "integer"
+              },
+              "maxOutputTokens": {
+                "description": "Limit on the number of output tokens for extracted custom attributes with the \"generate\" method.\nThis field can be set to limit the extraction cost, but may result in quality degradation.\n\nSee an example of token counting in the\n[maxInputTokens](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/customAttributesOptions.maxInputTokens)\nfield above.\n",
+                "minimum": 1,
+                "type": "integer"
+              },
+              "method": {
+                "default": "generate",
+                "description": "Method to use for custom attributes extraction:\n* \"generate\" (default) generates extracted data with the help of a generative Large Language Model (LLM).\n  It is the most powerful and versatile extraction method, but also the most expensive one,\n  with [variable per-request cost](https://docs.zyte.com/zyte-api/pricing.html#request-costs).\n\n* \"extract\" locates extracted data in the requested web page with the help of a non-generative LLM.\n  It only supports a subset of the schema (only string, integer and number types),\n  and can't perform generative tasks such as summarization or data transformation.\n  It is however much cheaper compared to the generative method and has a\n  [fixed per-request cost](https://docs.zyte.com/zyte-api/pricing.html#request-costs).\n",
+                "enum": ["generate", "extract"],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "customHttpRequestHeaders": {
+            "description": "HTTP request headers.\n\nCan only be used in combination with\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseBody).\nTo set headers with other outputs, see\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n\nSetting HTTP request headers has some caveats:\n\n-   Zyte API sends some headers automatically for\n    [ban avoidance](https://docs.zyte.com/zyte-api/usage/errors.html#ban-handling),\n    and may silently override or drop some of your custom headers\n    for that purpose.\n\n    However, your custom headers may override those automatic\n    headers, and in doing so they can break the ban avoidance\n    capabilities of Zyte API, as some websites may ban based on the\n    presence, values, or order of certain headers.\n\n-   You cannot set the `Cookie` header. Use\n    [requestCookies](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestCookies)\n    instead.\n\n-   If you set multiple headers with the same name, only the last\n    header value will be sent. To overcome this limitation, [join\n    the header values with a comma into a single header value](https://stackoverflow.com/a/4371395).\n    For example, replace `\"customHttpRequestHeaders\": [{\"name\":\n    \"foo\", \"value\": \"bar\"}, {\"name\": \"foo\", \"value\": \"baz\"}]` with\n    `\"customHttpRequestHeaders\": [{\"name\": \"foo\", \"value\":\n    \"bar,baz\"}]`.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/http.html#zapi-body-request-headers).\nSee also:\n[httpRequestMethod](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpRequestMethod),\n[httpRequestText](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpRequestText),\n[httpRequestBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpRequestBody),\n[httpResponseHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/httpResponseHeaders).\n",
+            "items": {
+              "$ref": "#/components/schemas/CustomHttpRequestHeader"
+            },
+            "maxItems": 200,
+            "type": "array"
+          },
+          "device": {
+            "description": "Type of device to emulate during your request.\n\nA desktop device is emulated by default.\n\nCan only be used in combination with\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseBody).\n",
+            "enum": ["desktop", "mobile"],
+            "type": "string"
+          },
+          "echoData": {
+            "description": "This field is returned in the\n[echoData](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/echoData)\nresponse field, verbatim.\n\nThis field can be useful, for example, to keep track of the\noriginal request order when\n[sending multiple requests in parallel](https://docs.zyte.com/zyte-api/usage/optimize.html#zapi-parallel).\n\nThe request can be rejected if the data is too big.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-metadata).\nSee also:\n[jobId](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/jobId).\n"
+          },
+          "followRedirect": {
+            "description": "Whether to follow\n[HTTP redirection](https://developer.mozilla.org/en-US/docs/Web/HTTP/Redirections)\nor not.\n\nOnly supported in\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html#zapi-http-redirection),\n[browser requests always follow redirection](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-browser-redirection).\n",
+            "type": "boolean"
+          },
+          "forumThread": {
+            "default": false,
+            "description": "Set to `true` to get forum threads data in the\n[forumThread](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/forumThread)\nresponse field.\n\nThe target page should contain an individual forum thread page on a forum website.\n\nTo combine this field with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html),\nset\n[forumThread.extractFrom](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/forumThread.extractFrom)\nto `\"httpResponseBody\"`.\nIf you use\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions),\ndata extraction happens *after* action execution has finished or\ntimed out.\n\nSee also:\n[List of all automatic extraction request fields](https://docs.zyte.com/zyte-api/usage/extract.html#zapi-extract-fields),\n[article](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/article),\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml),\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "forumThreadOptions": {
+            "$ref": "#/components/schemas/ExtractionOptions",
+            "description": "Additional options for forumThread extraction.\n"
+          },
+          "geolocation": {
+            "$ref": "#/components/schemas/CountryCode"
+          },
+          "httpRequestBody": {
+            "description": "[Base64](https://en.wikipedia.org/wiki/Base64)-encoded data to send\nas request body.\n\nCan only be used in combination with\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseBody).\n\nIt usually needs to be used in combination with\n[httpRequestMethod](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpRequestMethod).\n\nIf you only need to send UTF-8-encoded text, use\n[httpRequestText](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpRequestText)\ninstead to skip Base64-encoding. Note that you cannot combine both\nfields on the same request.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/http.html#zapi-set-body).\nSee also:\n[customHttpRequestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/customHttpRequestHeaders).\n",
+            "format": "byte",
+            "maxLength": 400000,
+            "type": "string"
+          },
+          "httpRequestMethod": {
+            "description": "Request [HTTP method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).\n\nCan only be used in combination with\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseBody).\n\n[See an example](https://docs.zyte.com/zyte-api/usage/http.html#zapi-set-method).\nSee also:\n[httpRequestText](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpRequestText),\n[httpRequestBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpRequestBody),\n[customHttpRequestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/customHttpRequestHeaders),\n[httpResponseHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/httpResponseHeaders).\n",
+            "enum": ["GET", "POST", "PUT", "DELETE", "OPTIONS", "TRACE", "PATCH", "HEAD"],
+            "type": "string"
+          },
+          "httpRequestText": {
+            "description": "UTF-8 text to send as request body.\n\nCan only be used in combination with\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseBody).\n\nIt usually needs to be used in combination with\n[httpRequestMethod](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpRequestMethod).\n\nIf you need to send a binary or non-UTF-8 request body,\nuse\n[httpRequestBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpRequestBody)\ninstead. Note that you cannot combine both fields on the same\nrequest.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/http.html#zapi-set-body).\nSee also:\n[customHttpRequestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/customHttpRequestHeaders).\n",
+            "example": "{\"name\":\"John Doe\",\"email\":\"johndoe@example.com\",\"age\":32,\"address\":{\"street\":\"123 Main St\",\"city\":\"Anytown\",\"state\":\"CA\",\"zip\":\"12345\"},\"phone_numbers\":[\"+1 555 555 1212\",\"+1 555 555 1313\"]}",
+            "maxLength": 400000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "httpResponseBody": {
+            "default": false,
+            "description": "Set to `true` to get the HTTP response body in the\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/httpResponseBody)\nresponse field.\n\nThis field is not compatible with\n[browser automation](https://docs.zyte.com/zyte-api/usage/browser.html).\n\n[See an example](https://docs.zyte.com/zyte-api/usage/http.html#example-httpresponsebody).\nSee also:\n[httpRequestMethod](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpRequestMethod),\n[httpRequestText](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpRequestText),\n[httpRequestBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpRequestBody),\n[customHttpRequestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/customHttpRequestHeaders).\n",
+            "type": "boolean"
+          },
+          "httpResponseHeaders": {
+            "default": false,
+            "description": "Set to `true` to get the HTTP response headers in the\n[httpResponseHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/httpResponseHeaders)\nresponse field.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-headers).\nSee also:\n[customHttpRequestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/customHttpRequestHeaders),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "includeIframes": {
+            "default": false,
+            "description": "Whether to add the content of\n[iframes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe)\ninto\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/browserHtml).\n\nNote that iframes are visible in screenshots even if this is set to\n`false`.\n\nSee also:\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml).\n",
+            "type": "boolean"
+          },
+          "ipType": {
+            "description": "[Type of IP address](https://docs.zyte.com/zyte-api/usage/features.html#zapi-ip-type)\nfrom which the request should be sent.\n\nIf not specified, Zyte API will use an IP type that, for the target\nwebsite, does not cause bans or unexpected response data.\n\nIf you believe Zyte API is using the wrong default IP type for a\nwebsite, please\n[reach out to our expert anti-ban team](https://support.zyte.com/support/tickets/new).\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-ip-type).\n",
+            "enum": ["datacenter", "residential"],
+            "type": "string"
+          },
+          "javascript": {
+            "description": "Forces JavaScript execution on a\n[browser request](https://docs.zyte.com/zyte-api/usage/browser.html)\nto be enabled (`true`) or disabled (`false`).\n\nBy default Zyte API enables or disables JavaScript execution for a\nrequest depending on which option makes it easier to avoid bans.\nUse this request field to override that choice.\n\nPassing this request field when requesting automatic extraction (\n[product](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/product),\n[article](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/article),\netc.) may impact the quality of the returned data, as it might\noverride the optimal value for automatic extraction.\n\nThis field is not compatible with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html).\n\n[See an example](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-javascript).\n",
+            "type": "boolean"
+          },
+          "jobId": {
+            "description": "ID of the\n[Scrapy Cloud](https://docs.zyte.com/scrapy-cloud/get-started.html)\njob from which this request has been sent, to be returned in the\n[jobId](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/jobId)\nresponse field.\n\nThis field is meant to help with request tracking.\n\n[scrapy-zyte-api](https://scrapy-zyte-api.readthedocs.io/en/latest/index.html)\nfills this request field automatically.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-metadata).\nSee also:\n[echoData](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/echoData).\n",
+            "example": "example-job-1",
+            "maxLength": 100,
+            "type": "string"
+          },
+          "jobPosting": {
+            "default": false,
+            "description": "Set to `true` to get job posting data in the\n[jobPosting](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/jobPosting)\nresponse field.\n\nThe target page should contain individual job posting page on a company website or on a job website.\n\nTo combine this field with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html),\nset\n[jobPostingOptions.extractFrom](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/jobPostingOptions.extractFrom)\nto `\"httpResponseBody\"`.\n\nIf you use\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions),\ndata extraction happens *after* action execution has finished or\ntimed out.\n\nSee also:\n[List of all automatic extraction request fields](https://docs.zyte.com/zyte-api/usage/extract.html#zapi-extract-fields),\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml),\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "jobPostingNavigation": {
+            "default": false,
+            "description": "Set to `true` to get job posting navigation data in the\n[jobPostingNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/jobPostingNavigation)\nresponse field.\n\nThe target page should contain multiple job postings and/or\nsubcategories that can be followed.\n\nJob posting navigation data is especially useful for implementing\njob posting crawling, i.e. following links to job posting pages, as well as\npagination that can in turn link to more\njob posting pages.\n\nJob posting navigation data can also be used to get basic information\nof job postings on a website, obtaining the URLs and\nlink names of the job postings, without making\nindividual requests for them.\n\nTo combine this field with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html),\nset\n[jobPostingNavigationOptions.extractFrom](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/jobPostingNavigationOptions.extractFrom)\nto `\"httpResponseBody\"`.\n\nIf you use\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions),\ndata extraction happens *after* action execution has finished or\ntimed out.\n\nSee also:\n[List of all automatic extraction request fields](https://docs.zyte.com/zyte-api/usage/extract.html#zapi-extract-fields),\n[jobPosting](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/jobPosting),\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml),\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "jobPostingNavigationOptions": {
+            "$ref": "#/components/schemas/ExtractionOptions",
+            "description": "Additional options for jobPostingNavigation extraction.\n"
+          },
+          "jobPostingOptions": {
+            "$ref": "#/components/schemas/ExtractionOptions",
+            "description": "Additional options for jobPosting extraction.\n"
+          },
+          "networkCapture": {
+            "$ref": "#/components/schemas/NetworkCaptureFilterSequence"
+          },
+          "pageContent": {
+            "default": false,
+            "description": "Set to `true` to get page content data in the\n[pageContent](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/pageContent)\nresponse field.\n\nThe target page can contain any type of data.\n\nPage content data is especially useful for understanding the layout and \nhierarchy of information on a page, enabling advanced processing such as \ncontent extraction, user experience analysis, and automated page summarization.\n\nPage content data can also be used to capture the main content intended \nfor users, along with auxiliary navigation components such as headers, footers, \nsidebars, and pagination controls. This makes it possible to distinguish core \ncontent from supporting links used for site-wide navigation.\n\nTo combine this field with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html),\nset\n[pageContentOptions.extractFrom](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/pageContentOptions.extractFrom)\nto `\"httpResponseBody\"`.\n\nIf you use\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions),\ndata extraction happens *after* action execution has finished or\ntimed out.\n\nSee also:\n[List of all automatic extraction request fields](https://docs.zyte.com/zyte-api/usage/extract.html#zapi-extract-fields),\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml),\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "pageContentOptions": {
+            "$ref": "#/components/schemas/ExtractionOptions",
+            "description": "Additional options for pageContent extraction.\n"
+          },
+          "product": {
+            "default": false,
+            "description": "Set to `true` to get product data in the\n[product](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/product)\nresponse field.\n\nThe target page should only contain a single product. For\npages with multiple products consider using\n[productList](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productList)\ninstead.\n\nTo combine this field with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html),\nset\n[productOptions.extractFrom](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productOptions.extractFrom)\nto `\"httpResponseBody\"`.\n\nIf you use\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions),\ndata extraction happens *after* action execution has finished or\ntimed out.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/extract.html).\nSee also:\n[List of all automatic extraction request fields](https://docs.zyte.com/zyte-api/usage/extract.html#zapi-extract-fields),\n[productNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productNavigation),\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml),\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "productList": {
+            "default": false,
+            "description": "Set to `true` to get product list data in the\n[productList](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/productList)\nresponse field.\n\nThe target page should contain a list or a grid of products.\n\nProduct list data is especially useful to get basic information\nabout products on a website using a smaller number of requests,\nwhen product attributes are extracted directly from a product list\npage, without making individual\n[product](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/product)\nrequests.\n\nTo implement product crawling from product list pages, use\n[productNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productNavigation),\nwhich also enables navigation through pagination links.\n\nTo combine this field with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html),\nset\n[productListOptions.extractFrom](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productListOptions.extractFrom)\nto `\"httpResponseBody\"`.\n\nIf you use\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions),\ndata extraction happens *after* action execution has finished or\ntimed out.\n\nSee also:\n[List of all automatic extraction request fields](https://docs.zyte.com/zyte-api/usage/extract.html#zapi-extract-fields),\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml),\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "productListOptions": {
+            "$ref": "#/components/schemas/ExtractionOptions",
+            "description": "Additional options for productList extraction.\n"
+          },
+          "productNavigation": {
+            "default": false,
+            "description": "Set to `true` to get product navigation data in the\n[productNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/productNavigation)\nresponse field.\n\nThe target page should contain multiple products and/or\nsubcategories that can be followed.\n\nProduct navigation data is especially useful for implementing\nproduct crawling, i.e. following links to product pages, as well as\nto subcategories and pagination that can in turn link to more\nproduct pages.\n\nProduct navigation data can also be used to get basic information\nof products and subcategories on a website, obtaining the URLs and\nlink names of the products and subcategories, without making\nindividual requests for those products.\n\nTo combine this field with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html),\nset\n[productNavigationOptions.extractFrom](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productNavigationOptions.extractFrom)\nto `\"httpResponseBody\"`.\n\nIf you use\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions),\ndata extraction happens *after* action execution has finished or\ntimed out.\n\nSee also:\n[List of all automatic extraction request fields](https://docs.zyte.com/zyte-api/usage/extract.html#zapi-extract-fields),\n[product](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/product),\n[productList](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productList),\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml),\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "productNavigationOptions": {
+            "$ref": "#/components/schemas/ExtractionOptions",
+            "description": "Additional options for productNavigation extraction.\n"
+          },
+          "productOptions": {
+            "description": "Additional options for product extraction.\n",
+            "properties": {
+              "extractFrom": {
+                "$ref": "#/components/schemas/ExtractionOptions/properties/extractFrom"
+              },
+              "model": {
+                "description": "Model version to use for product extraction. If not specified,\nthe \"2024-09-16\" version is used.\n\nAvailable product models:\n\n- \"2024-02-01\"\n\n- \"2024-09-16\"\n\nSee [Model pinning](https://docs.zyte.com/zyte-api/usage/extract/index.html#model-pinning).\n",
+                "enum": ["2024-02-01", "2024-09-16"],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "requestCookies": {
+            "description": "A list of cookies to be sent with a request.\n\nYou can use the contents of the\n[responseCookies](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/responseCookies)\nresponse field as a value for this request field.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-cookies).\n",
+            "items": {
+              "$ref": "#/components/schemas/Cookie"
+            },
+            "maxItems": 100,
+            "type": "array"
+          },
+          "requestHeaders": {
+            "$ref": "#/components/schemas/RequestHeaders"
+          },
+          "responseCookies": {
+            "default": false,
+            "description": "Set to `true` to get the list of cookies set during a request\nin the\n[responseCookies](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/responseCookies)\nresponse field.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-cookies).\nSee also:\n[requestCookies](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestCookies).\n",
+            "type": "boolean"
+          },
+          "screenshot": {
+            "default": false,
+            "description": "Set to `true` to get a page screenshot in the\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/screenshot)\nresponse field.\n\nThis field is not compatible with\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html).\n\nTo adjust the screenshot contents you can use\n[screenshotOptions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshotOptions)\nand\n[viewport](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/viewport).\n\nIf you use\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions),\nthe screenshot is generated *after* action execution has finished\nor timed out.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-screenshot).\nSee also:\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml),\n[requestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestHeaders).\n",
+            "type": "boolean"
+          },
+          "screenshotOptions": {
+            "$ref": "#/components/schemas/ScreenshotOptions"
+          },
+          "serp": {
+            "description": "Set to `true` to get the data of a search engine results page\n(SERP) in the\n[serp](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/serp)\nresponse field.\n\nThe\n[target URL](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/url)\nshould be a search engine URL.\n\nCurrently, you cannot combine this field with any other request\nfields besides\n[serpOptions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/serpOptions)\nand\n[url](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/url).\n\nSee also:\n[List of all automatic extraction request fields](https://docs.zyte.com/zyte-api/usage/extract.html#zapi-extract-fields).\n",
+            "type": "boolean"
+          },
+          "serpOptions": {
+            "$ref": "#/components/schemas/SerpOptions"
+          },
+          "session": {
+            "$ref": "#/components/schemas/Session"
+          },
+          "sessionContext": {
+            "$ref": "#/components/schemas/SessionContext"
+          },
+          "sessionContextParameters": {
+            "$ref": "#/components/schemas/SessionContextParameters"
+          },
+          "tags": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Assign arbitrary key-value pairs to the request that you can use\nfor filtering in the\n[Stats API](https://docs.zyte.com/zyte-api/usage/stats.html).\n\nKeys must be strings. Values must be strings or `null`.\n\nFor example: `{\"tags\": {\"foo\": \"bar\", \"baz\": null}}`.\n",
+            "nullable": true,
+            "type": "object"
+          },
+          "url": {
+            "description": "An absolute URL to extract data from.\n\nThe host name must be a domain name, it cannot be an IP address.\n",
+            "example": "https://example.com/item-page",
+            "maxLength": 8192,
+            "type": "string"
+          },
+          "viewport": {
+            "$ref": "#/components/schemas/Viewport"
+          }
+        },
+        "required": ["url"],
+        "type": "object"
+      },
+      "ExtractionOptions": {
+        "description": "Options for automatic extraction.\n",
+        "properties": {
+          "extractFrom": {
+            "description": "[Extraction source](https://docs.zyte.com/zyte-api/usage/extract/index.html#zapi-extract-from).\n\n`httpResponseBody` extracts from\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/httpResponseBody).\nIt is usually faster and cheaper.\n\n`browserHtmlOnly` extracts from\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/browserHtml).\nIt typically improves quality over `httpResponseBody` on\nJavaScript-heavy web pages.\n\n`browserHtml` extracts from both\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/browserHtml)\nand visual features of the rendered web page. It typically improves\nquality over `browserHtmlOnly`, but is not as robust in case of\nrendering issues.\n\nIf not specified, `browserHtml` is currently used by default for\n[AI extraction](https://docs.zyte.com/zyte-api/usage/extract/index.html#ai-extraction),\nwhile `httpResponseBody` is used by default for\n[non-AI extraction](https://docs.zyte.com/zyte-api/usage/extract/index.html#non-ai-extraction).\nIn the future, the default value may depend on the target website.\n",
+            "enum": ["httpResponseBody", "browserHtml", "browserHtmlOnly"],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ForbiddenDomainProblem": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Problem"
+          }
+        ],
+        "properties": {
+          "blockedDomain": {
+            "description": "The domain which extraction cannot be performed.\n",
+            "example": "forbiddendomain.com",
+            "type": "string"
+          }
+        }
+      },
+      "ForumThread": {
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataList"
+          },
+          "posts": {
+            "description": "List of posts available on this page, including the first or top post.",
+            "items": {
+              "properties": {
+                "datePublished": {
+                  "description": "Publication date. ISO-formatted with 'T' separator, may contain a timezone.\n",
+                  "example": "2019-06-19T00:00:00",
+                  "type": "string"
+                },
+                "datePublishedRaw": {
+                  "description": "Same date as \"datePublished\", but before parsing/normalization, i.e. as\nit appears on the website.\n",
+                  "example": "June 19, 2019",
+                  "type": "string"
+                },
+                "metadata": {
+                  "$ref": "#/components/schemas/MetadataListItem"
+                },
+                "reactions": {
+                  "description": "Details of reactions to this post.",
+                  "properties": {
+                    "likes": {
+                      "description": "Number of up-votes or likes/stars received by the post.\n",
+                      "example": 3,
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "replies": {
+                      "description": "Number of replies received by the post.\n",
+                      "example": 2,
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object"
+                },
+                "text": {
+                  "description": "Text of the post.\n",
+                  "example": "Cooking rice is a hobby of mine. Here is how I cook it.",
+                  "type": "string"
+                }
+              },
+              "required": ["metadata"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "topic": {
+            "description": "Topic that is discussed on the page.",
+            "properties": {
+              "name": {
+                "description": "Name of the topic.",
+                "example": "How do you cook rice?",
+                "type": "string"
+              }
+            },
+            "required": ["name"],
+            "type": "object"
+          },
+          "url": {
+            "description": "URL of a page where this forum post list was extracted.",
+            "example": "https://example.com/forum/thread/1/",
+            "type": "string"
+          }
+        },
+        "required": ["url", "metadata"],
+        "type": "object"
+      },
+      "GoToOptions": {
+        "description": "Used to customise navigation options",
+        "properties": {
+          "timeout": {
+            "default": 30,
+            "description": "Maximum navigation time in seconds, defaults to 30 seconds. Pass 0 to disable timeout.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "waitUntil": {
+            "default": "load",
+            "description": "When to consider navigation succeeded, defaults to load. Events can be either:\n* load - consider navigation to be finished when the load event is fired.\n* networkidle0 -  consider navigation to be finished when there are no more than 0 network connections for at least 500 ms\n* domcontentloaded - consider navigation to be finished when the DOMContentLoaded event is fired.\n",
+            "enum": ["load", "networkidle0", "domcontentloaded"],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Gtin": {
+        "description": "Standardized GTIN product identifier which is unique for a product across different sellers.\n",
+        "example": {
+          "type": "isbn13",
+          "value": 9781933624341
+        },
+        "properties": {
+          "type": {
+            "description": "`gtin14` corresponds to former names\n*EAN/UCC-14*, *SCC-14*, *DUN-14*, *UPC Case Code*,\n*UPC Shipping Container Code*.\n\n`gtin13` also includes the *jan* (japanese article number).\n",
+            "enum": ["gtin8", "gtin13", "gtin14", "isbn10", "isbn13", "ismn", "issn", "upc"],
+            "type": "string"
+          },
+          "value": {
+            "description": "The GTIN value as a string.",
+            "type": "string"
+          }
+        },
+        "required": ["type", "value"],
+        "type": "object"
+      },
+      "HTTPHeader": {
+        "description": "A header name and value.",
+        "example": {
+          "name": "Content-Type",
+          "value": "text/html; charset=utf-8"
+        },
+        "properties": {
+          "name": {
+            "description": "The name of the header",
+            "minLength": 1,
+            "type": "string"
+          },
+          "value": {
+            "description": "The value of the header",
+            "type": "string"
+          }
+        },
+        "required": ["name", "value"],
+        "type": "object"
+      },
+      "Image": {
+        "description": "Image.",
+        "properties": {
+          "url": {
+            "description": "URL of an image.",
+            "example": "http://example.com/item-1/image1.jpeg",
+            "type": "string"
+          }
+        },
+        "required": ["url"],
+        "type": "object"
+      },
+      "InteractionLogEntry": {
+        "description": "Interaction log entry",
+        "properties": {
+          "level": {
+            "description": "The log level",
+            "enum": ["debug", "info", "warning", "error", "warn"],
+            "type": "string"
+          },
+          "message": {
+            "description": "The log message",
+            "type": "string"
+          },
+          "time": {
+            "description": "The ISO 8601 format of the time",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "JobPosting": {
+        "properties": {
+          "baseSalary": {
+            "description": "The base salary of the job or of an employee in the proposed role.\n",
+            "properties": {
+              "currency": {
+                "description": "Currency associated with the salary amount.\nISO 4217 standard.\n",
+                "example": "USD",
+                "type": "string"
+              },
+              "currencyRaw": {
+                "description": "Currency associated with the salary amount, without normalization.",
+                "example": "$",
+                "type": "string"
+              },
+              "raw": {
+                "description": "Salary amount as it appears on the website.",
+                "example": "$53,251 a year",
+                "type": "string"
+              },
+              "valueMax": {
+                "description": "The maximum value of the base salary as a number string.\nIn case of only one value given for the salary instead of a range, valueMax is used to represent it.\n",
+                "example": "53251.0",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "datePublished": {
+            "description": "Publication date of the job posting.\nISO-formatted with 'T' separator, may contain a timezone.\n",
+            "example": "2019-06-19T00:00:00",
+            "type": "string"
+          },
+          "datePublishedRaw": {
+            "description": "Same date as 'datePublished', but before parsing/normalization,\ni.e. as it appears on the website.\n",
+            "example": "19 June 2019",
+            "type": "string"
+          },
+          "description": {
+            "description": "A description of the job posting including sub-headings,\nwith newline separators.\n",
+            "example": "Job Description ...",
+            "type": "string"
+          },
+          "descriptionHtml": {
+            "description": "Simplified HTML of the description, including sub-headings,\nimage captions and embedded content.\n",
+            "example": "<article>HTML for Job Description ...",
+            "type": "string"
+          },
+          "employmentType": {
+            "description": "Type of employment\n(e.g. full-time, part-time, contract, temporary, seasonal, internship).\n",
+            "example": "Full-time",
+            "type": "string"
+          },
+          "hiringOrganization": {
+            "description": "Information about the organization offering the job position.",
+            "properties": {
+              "name": {
+                "description": "Name of the organization.",
+                "example": "ACME Corp.",
+                "type": "string"
+              }
+            },
+            "required": ["name"],
+            "type": "object"
+          },
+          "jobLocation": {
+            "description": "A (typically single) geographic location associated with the job position.\n",
+            "properties": {
+              "raw": {
+                "description": "Job location as it appears on the website.",
+                "example": "West New York, NJ 07093",
+                "type": "string"
+              }
+            },
+            "required": ["raw"],
+            "type": "object"
+          },
+          "jobTitle": {
+            "description": "The title of the job.",
+            "example": "Regional Manager",
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/schemas-Metadata"
+          },
+          "url": {
+            "description": "URL of a page where this job posting was extracted.",
+            "example": "https://example.com/job",
+            "type": "string"
+          },
+          "validThrough": {
+            "description": "The date after which the job posting is not valid,\ne.g. the end of an offer.\nISO-formatted with \u2018T\u2019 separator, may contain a timezone.\n",
+            "example": "2019-08-20T00:00:00",
+            "type": "string"
+          }
+        },
+        "required": ["url", "metadata"],
+        "type": "object"
+      },
+      "JobPostingNavigation": {
+        "properties": {
+          "items": {
+            "description": "List of job postings available on this page.",
+            "items": {
+              "properties": {
+                "metadata": {
+                  "$ref": "#/components/schemas/MetadataListItem"
+                },
+                "name": {
+                  "description": "The name of the job posting or job posting link text.",
+                  "example": "Job posting name",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "URL of a detailed job posting page.\nPass this URL with \"jobPosting: true\" in the request to\nextract detailed information about the job posting.\n",
+                  "example": "https://example.com/jobs/1/",
+                  "type": "string"
+                }
+              },
+              "required": ["metadata", "url"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataList"
+          },
+          "nextPage": {
+            "$ref": "#/components/schemas/PaginationNext"
+          },
+          "pageNumber": {
+            "$ref": "#/components/schemas/PageNumber"
+          },
+          "url": {
+            "description": "URL a of page.",
+            "example": "https://example.com/jobs/",
+            "type": "string"
+          }
+        },
+        "required": ["url", "metadata"],
+        "type": "object"
+      },
+      "Metadata": {
+        "description": "Metadata.",
+        "properties": {
+          "dateDownloaded": {
+            "description": "The timestamp at which the data was downloaded. Timezone: UTC.\nFormat: ISO 8601 format: \"YYYY-MM-DDThh:mm:ssZ\"\n",
+            "example": "2024-02-29T13:01:54Z",
+            "type": "string"
+          },
+          "displayedQuery": {
+            "description": "Search query as seen in the web page.",
+            "example": "squid proxy",
+            "type": "string"
+          },
+          "searchedQuery": {
+            "description": "Search query as specified in the input URL.",
+            "example": "squid proxy",
+            "type": "string"
+          },
+          "totalOrganicResults": {
+            "description": "Total number of organic results reported by the search engine.\n",
+            "example": 10000,
+            "format": "int64",
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "MetadataList": {
+        "description": "Top-level metadata for list data types.",
+        "properties": {
+          "dateDownloaded": {
+            "$ref": "#/components/schemas/DateDownloaded"
+          }
+        },
+        "required": ["dateDownloaded"]
+      },
+      "MetadataListItem": {
+        "description": "Item-level metadata for list data types.",
+        "properties": {
+          "probability": {
+            "description": "Probability that extracted item in a list is a valid item.\nItems which are unlikely to be valid are not returned,\nso normally no extra thresholding is needed for list items.\nThis probability is not calibrated.\n",
+            "example": 0.34,
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": ["probability"]
+      },
+      "Mpn": {
+        "description": "The Manufacturer Part Number (MPN) of the product. It is issued by the manufacturer, and is the same across different e-commerce websites.",
+        "example": "code-123",
+        "type": "string"
+      },
+      "Name": {
+        "description": "The name of the product.",
+        "example": "Product name",
+        "type": "string"
+      },
+      "NetworkCaptureFilter": {
+        "description": "Filter defined in the\n[networkCapture](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/networkCapture)\nrequest field that matched the captured response.\n",
+        "discriminator": {
+          "mapping": {
+            "resourceType": "#/components/schemas/ResourceTypeFilter",
+            "url": "#/components/schemas/UrlFilter"
+          },
+          "propertyName": "filterType"
+        },
+        "properties": {
+          "filterType": {
+            "enum": ["url", "resourceType"],
+            "type": "string"
+          },
+          "httpResponseBody": {
+            "default": false,
+            "description": "Set to `true` to get the body of the captured response in the\n[networkCapture[].httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/networkCapture.httpResponseBody)\nresponse field.\n",
+            "type": "boolean"
+          }
+        },
+        "required": ["filterType"],
+        "type": "object"
+      },
+      "NetworkCaptureFilterSequence": {
+        "description": "Filters to capture browser network responses.\n\nHTTP responses received during browser rendering (including\n[action](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions)\nexecution) will be returned in the\n[networkCapture](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/networkCapture)\nresponse field if they match any of the filters defined here.\n\nYou can capture up to 10 responses, provided the sum of their bodies\ndoes not exceed 5 MiB. If they do exceed that limit, only the first\ncaptured responses within the limit are returned.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-network-capture).\n",
+        "items": {
+          "$ref": "#/components/schemas/NetworkCaptureFilter"
+        },
+        "maxItems": 10,
+        "type": "array"
+      },
+      "OrganicResult": {
+        "properties": {
+          "description": {
+            "description": "Result excerpt.",
+            "example": "Squid is a caching proxy for the Web supporting HTTP, HTTPS, FTP, and more. It reduces bandwidth and improves response times by caching and reusing frequently- ...\n",
+            "type": "string"
+          },
+          "name": {
+            "description": "Result title.",
+            "example": "squid-cache.org",
+            "type": "string"
+          },
+          "rank": {
+            "description": "Result position among organic results in the search page.\n\nThe first result of a search page is always 1, regardless of the\nvalue of\n[serp.pageNumber](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/serp.pageNumber).\n",
+            "example": 1,
+            "type": "integer"
+          },
+          "url": {
+            "$ref": "#/components/schemas/OrganicResultURL"
+          }
+        },
+        "type": "object"
+      },
+      "OrganicResultURL": {
+        "additionalProperties": false,
+        "description": "Result URL.",
+        "example": "https://www.squid-cache.org/",
+        "pattern": "^https?://[\\S]+$",
+        "type": "string"
+      },
+      "PageContent": {
+        "properties": {
+          "breadcrumbs": {
+            "description": "A list of breadcrumbs (a specific navigation element).\n",
+            "example": [
+              {
+                "name": "Home",
+                "url": "https://example.com/"
+              },
+              {
+                "name": "Category",
+                "url": "https://example.com/category"
+              },
+              {
+                "name": "Subcategory"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/Breadcrumb"
+            },
+            "type": "array"
+          },
+          "canonicalUrl": {
+            "description": "Canonical URL of the page, if available.",
+            "example": "https://example.com/canonical-url-page/",
+            "type": "string"
+          },
+          "headline": {
+            "description": "A page headline.",
+            "example": "Example page headline",
+            "type": "string"
+          },
+          "itemMain": {
+            "description": "Text of the primary content of the page.\n\nIt does not include navigation elements (headers, footers, \nsidebars or pagination links). \n",
+            "example": "Example content snippet showing part of the page\u2019s main text\u2026",
+            "type": "string"
+          },
+          "itemMainXPath": {
+            "description": "XPath for `itemMain`.\n\nIt is an XPath 1.0 expression that points to the smallest HTML \nelement that contains all of `itemMain`.\n\nThe expression may only work with an HTML5-compliant parser.\n",
+            "example": "//*[@id='homepage-container']/*[1]",
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/schemas-Metadata"
+          },
+          "navigationFooter": {
+            "description": "Navigation items from the footer.\n\nThey are typically for site-wide navigation, not page-specific.\n",
+            "items": {
+              "properties": {
+                "name": {
+                  "description": "Name.",
+                  "example": "Privacy Policy",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "URL.",
+                  "example": "https://example.com/policy/",
+                  "type": "string"
+                }
+              },
+              "required": ["url"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "navigationHeader": {
+            "description": "Navigation items from the header.\n\nThey are typically for site-wide navigation, not page-specific.\n",
+            "items": {
+              "properties": {
+                "name": {
+                  "description": "Name.",
+                  "example": "Category name",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "URL.",
+                  "example": "https://example.com/category/",
+                  "type": "string"
+                }
+              },
+              "required": ["url"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "navigationSidebar": {
+            "description": "Navigation items from the sidebars.\n\nThey are typically for site-wide navigation, not page-specific.\n",
+            "items": {
+              "properties": {
+                "name": {
+                  "description": "Name.",
+                  "example": "Sidebar link",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "URL.",
+                  "example": "https://example.com/sidebar-link/",
+                  "type": "string"
+                }
+              },
+              "required": ["url"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "nextPage": {
+            "$ref": "#/components/schemas/PaginationNext"
+          },
+          "pagination": {
+            "description": "Pagination items.\n\nItems to navigate content pages, either relative to the current \npage (e.g. current, next, previous) or absolute (e.g. first, last, \nspecific page number).\n",
+            "items": {
+              "properties": {
+                "name": {
+                  "description": "Name.",
+                  "example": "Next",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "URL.",
+                  "example": "https://example.com/?page=2",
+                  "type": "string"
+                }
+              },
+              "required": ["url"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "title": {
+            "description": "A page title extracted from the `<title>` tag of the page.",
+            "example": "Example page title",
+            "type": "string"
+          },
+          "url": {
+            "description": "URL of the page.",
+            "example": "https://example.com/example-page/",
+            "type": "string"
+          }
+        },
+        "required": ["url", "metadata"],
+        "type": "object"
+      },
+      "PageNumber": {
+        "description": "Integer describing the current page number. Starts at 1.",
+        "example": 2,
+        "type": "integer"
+      },
+      "PaginationNext": {
+        "description": "A link to the next page in the list.",
+        "properties": {
+          "name": {
+            "description": "Text of the link to the next page, if available.",
+            "example": "3",
+            "type": "string"
+          },
+          "url": {
+            "description": "URL of the next page in the list.",
+            "example": "http://example.com/foo?p=3",
+            "type": "string"
+          }
+        },
+        "required": ["url"],
+        "type": "object"
+      },
+      "PatternMatchingOptions": {
+        "default": "contains",
+        "description": "How to compare a user-defined string with a target string:\n\n- `contains` matches if the user-defined string is a substring of the\n  target string.\n\n- `exact` matches if the user-defined string is an exact match of the\n  target string.\n\n- `startsWith` matches if the target string starts with the\n  user-defined string.\n\n- `endsWith` matches if the target string ends with the user-defined\n  string.\n\nComparisons are case-sensitive. Regular expressions or wildcard\ncharacters are not supported.\n",
+        "enum": ["startsWith", "endsWith", "contains", "exact"],
+        "type": "string"
+      },
+      "PostalAddress": {
+        "description": "Postal address to be set",
+        "properties": {
+          "addressCountry": {
+            "description": "The country code in [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)",
+            "example": "US",
+            "type": "string"
+          },
+          "addressRegion": {
+            "description": "The region in which the address is. This value is specific to the website.",
+            "example": "California",
+            "type": "string"
+          },
+          "postalCode": {
+            "description": "The postal code.",
+            "type": "string"
+          },
+          "streetAddress": {
+            "description": "The street address.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Price": {
+        "description": "The price at which the product is being offered. If there is only one price associated with the offer, it is returned in this field.\n",
+        "example": "149",
+        "pattern": "^[0-9]+(\\.[0-9]+)?$",
+        "type": "string"
+      },
+      "Problem": {
+        "properties": {
+          "detail": {
+            "description": "A human-readable explanation specific to this occurrence of the problem that is helpful to locate the source of the problem and gives advice on how to proceed.\nWritten in English and readable for engineers, usually not suited for non-technical stakeholders, and not localized.\n",
+            "example": "Connection to database timed out",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP status code generated by Zyte API for this occurrence of the problem.\n",
+            "example": 503,
+            "exclusiveMaximum": true,
+            "format": "int32",
+            "maximum": 600,
+            "minimum": 100,
+            "type": "integer"
+          },
+          "title": {
+            "description": "A short summary of the problem type. Written in English and readable for engineers, usually not suited for non-technical stakeholders, and not localized.\n",
+            "example": "Service Unavailable",
+            "type": "string"
+          },
+          "type": {
+            "default": "about:blank",
+            "description": "A URI reference that uniquely identifies the problem type, only in\nthe context of the provided API.\n\nOpposed to the specification in RFC-7807, it is neither recommended\nto be dereferenceable and point to human-readable documentation nor\nglobally unique for the problem type.\n",
+            "example": "/problem/connection-error",
+            "format": "uri-reference",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Product": {
+        "properties": {
+          "additionalProperties": {
+            "description": "A list of properties or characteristics.\n\n* name field contains the property name,\n* value field contains the property value.\n\n![](https://docs.zyte.com/_static/images/schemas/product_info.png)\n",
+            "items": {
+              "$ref": "#/components/schemas/AdditionalProperty"
+            },
+            "type": "array"
+          },
+          "aggregateRating": {
+            "description": "The overall rating, based on a collection of reviews or ratings.\n\n![](https://docs.zyte.com/_static/images/schemas/rating.png)\n",
+            "properties": {
+              "bestRating": {
+                "description": "The highest value allowed in this rating system.",
+                "example": 5,
+                "type": "number"
+              },
+              "ratingValue": {
+                "description": "The average rating value.",
+                "example": 4,
+                "type": "number"
+              },
+              "reviewCount": {
+                "description": "The total number of reviews or ratings for the product.",
+                "example": 24,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "availability": {
+            "$ref": "#/components/schemas/Availability"
+          },
+          "brand": {
+            "description": "Brand or manufacturer of the product.\n",
+            "properties": {
+              "name": {
+                "description": "Name of the brand.",
+                "example": "Product brand",
+                "type": "string"
+              }
+            },
+            "required": ["name"],
+            "type": "object"
+          },
+          "breadcrumbs": {
+            "description": "A list of breadcrumbs (a specific navigation element)\nwith optional `name` and `url`.\n",
+            "example": [
+              {
+                "name": "Home",
+                "url": "https://example.com/"
+              },
+              {
+                "name": "Cell Phones",
+                "url": "https://example.com/cell-phones"
+              },
+              {
+                "name": "Cell Phones & Accessories"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/Breadcrumb"
+            },
+            "type": "array"
+          },
+          "canonicalUrl": {
+            "$ref": "#/components/schemas/CanonicalUrl"
+          },
+          "color": {
+            "$ref": "#/components/schemas/Color"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/Currency"
+          },
+          "currencyRaw": {
+            "$ref": "#/components/schemas/CurrencyRaw"
+          },
+          "description": {
+            "description": "Description of the product.",
+            "example": "product description",
+            "type": "string"
+          },
+          "descriptionHtml": {
+            "description": "Simplified HTML of the description, including sub-headings, image captions and embedded content.\n",
+            "example": "<article>HTML description for Product ...",
+            "type": "string"
+          },
+          "features": {
+            "description": "A list of features of the Product.\n\nThe features of a Product can be found generally on the product page arranged\nin a list, which is usually bulleted.\n",
+            "example": [
+              "Multi-System Compatible",
+              "HD Ready 1366 x 768 LED Panel",
+              "REFRESH RATE 100Hz PQI"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "gtin": {
+            "description": "Standardized GTIN product identifier which is unique for\na product across different sellers.\n",
+            "items": {
+              "$ref": "#/components/schemas/Gtin"
+            },
+            "type": "array"
+          },
+          "images": {
+            "description": "All images of the item (may include the main image).",
+            "items": {
+              "$ref": "#/components/schemas/Image"
+            },
+            "type": "array"
+          },
+          "mainImage": {
+            "$ref": "#/components/schemas/Image",
+            "description": "The main image of the item."
+          },
+          "material": {
+            "description": "The materials from which the product is made. Contains all product materials on the page.\n",
+            "example": "Metal, Plastic",
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/schemas-Metadata"
+          },
+          "mpn": {
+            "$ref": "#/components/schemas/Mpn"
+          },
+          "name": {
+            "$ref": "#/components/schemas/Name"
+          },
+          "price": {
+            "$ref": "#/components/schemas/Price"
+          },
+          "regularPrice": {
+            "$ref": "#/components/schemas/RegularPrice"
+          },
+          "size": {
+            "$ref": "#/components/schemas/Size"
+          },
+          "sku": {
+            "$ref": "#/components/schemas/Sku"
+          },
+          "style": {
+            "$ref": "#/components/schemas/Style"
+          },
+          "url": {
+            "$ref": "#/components/schemas/Url"
+          },
+          "variants": {
+            "description": "Array of product variants, using the same Product schema.\nRepresents extra information available about the variants of a product.\nAll variants are included into this array, including the variant\nshown on the page. If some field in this array is empty,\nit means that either the value is the same as in the top-level product,\nor that extraction API did not manage to extract it.\n",
+            "items": {
+              "properties": {
+                "additionalProperties": {
+                  "description": "A list of properties or characteristics.\n\n* name field contains the property name,\n* value field contains the property value.\n\n![](https://docs.zyte.com/_static/images/schemas/product_info.png)\n",
+                  "items": {
+                    "$ref": "#/components/schemas/AdditionalProperty"
+                  },
+                  "type": "array"
+                },
+                "availability": {
+                  "$ref": "#/components/schemas/Availability"
+                },
+                "canonicalUrl": {
+                  "$ref": "#/components/schemas/CanonicalUrl"
+                },
+                "color": {
+                  "$ref": "#/components/schemas/Color"
+                },
+                "currency": {
+                  "$ref": "#/components/schemas/Currency"
+                },
+                "currencyRaw": {
+                  "$ref": "#/components/schemas/CurrencyRaw"
+                },
+                "gtin": {
+                  "description": "Standardized GTIN product identifier which is unique for\na product across different sellers.\n",
+                  "items": {
+                    "$ref": "#/components/schemas/Gtin"
+                  },
+                  "type": "array"
+                },
+                "images": {
+                  "description": "All images of the item (may include the main image).",
+                  "items": {
+                    "$ref": "#/components/schemas/Image"
+                  },
+                  "type": "array"
+                },
+                "mainImage": {
+                  "$ref": "#/components/schemas/Image",
+                  "description": "The main image of the item."
+                },
+                "mpn": {
+                  "$ref": "#/components/schemas/Mpn"
+                },
+                "name": {
+                  "$ref": "#/components/schemas/Name"
+                },
+                "price": {
+                  "$ref": "#/components/schemas/Price"
+                },
+                "regularPrice": {
+                  "$ref": "#/components/schemas/RegularPrice"
+                },
+                "size": {
+                  "$ref": "#/components/schemas/Size"
+                },
+                "sku": {
+                  "$ref": "#/components/schemas/Sku"
+                },
+                "style": {
+                  "$ref": "#/components/schemas/Style"
+                },
+                "url": {
+                  "$ref": "#/components/schemas/Url"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "weight": {
+            "$ref": "#/components/schemas/Weight"
+          }
+        },
+        "required": ["url", "metadata"],
+        "type": "object"
+      },
+      "ProductList": {
+        "properties": {
+          "breadcrumbs": {
+            "description": "A list of breadcrumbs (a specific navigation element)\nwith optional `name` and `url`.\n",
+            "example": [
+              {
+                "name": "Home",
+                "url": "https://example.com/"
+              },
+              {
+                "name": "Cell Phones",
+                "url": "https://example.com/cell-phones"
+              },
+              {
+                "name": "Cell Phones & Accessories"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/Breadcrumb"
+            },
+            "type": "array"
+          },
+          "categoryName": {
+            "description": "Name of the category in which the listed products are.",
+            "example": "Sports & Outdoors",
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataList"
+          },
+          "products": {
+            "description": "List of products available on this page.",
+            "items": {
+              "properties": {
+                "currency": {
+                  "$ref": "#/components/schemas/Currency"
+                },
+                "currencyRaw": {
+                  "$ref": "#/components/schemas/CurrencyRaw"
+                },
+                "mainImage": {
+                  "$ref": "#/components/schemas/Image",
+                  "description": "The main image of the item."
+                },
+                "metadata": {
+                  "$ref": "#/components/schemas/MetadataListItem"
+                },
+                "name": {
+                  "description": "The name of the product.",
+                  "example": "Product name",
+                  "type": "string"
+                },
+                "price": {
+                  "$ref": "#/components/schemas/Price"
+                },
+                "regularPrice": {
+                  "$ref": "#/components/schemas/RegularPrice"
+                },
+                "url": {
+                  "description": "URL of a detailed product page.\nPass this URL with \"product: true\" in the request to\nextract detailed information about the product.\n",
+                  "example": "https://example.com/products/1/",
+                  "type": "string"
+                }
+              },
+              "required": ["metadata"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "url": {
+            "description": "URL of a page where this product list was extracted.",
+            "example": "https://example.com/products/",
+            "type": "string"
+          }
+        },
+        "required": ["url", "metadata"],
+        "type": "object"
+      },
+      "ProductNavigation": {
+        "properties": {
+          "categoryName": {
+            "description": "Name of the category in which the listed products are found.",
+            "example": "Sports & Outdoors",
+            "type": "string"
+          },
+          "items": {
+            "description": "List of products available on this page.",
+            "items": {
+              "properties": {
+                "metadata": {
+                  "$ref": "#/components/schemas/MetadataListItem"
+                },
+                "name": {
+                  "description": "The name of the product or product link text.",
+                  "example": "Product name",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "URL of a detailed product page.\nPass this URL with \"product: true\" in the request to\nextract detailed information about the product.\n",
+                  "example": "https://example.com/products/1/",
+                  "type": "string"
+                }
+              },
+              "required": ["metadata", "url"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataList"
+          },
+          "nextPage": {
+            "$ref": "#/components/schemas/PaginationNext"
+          },
+          "pageNumber": {
+            "$ref": "#/components/schemas/PageNumber"
+          },
+          "subCategories": {
+            "description": "List of subcategory links found on this page.",
+            "items": {
+              "properties": {
+                "metadata": {
+                  "$ref": "#/components/schemas/MetadataListItem"
+                },
+                "name": {
+                  "description": "The name of the subcategory or subcategory link text.",
+                  "example": "Category name",
+                  "type": "string"
+                },
+                "url": {
+                  "description": "URL of the subcategory.\n",
+                  "example": "https://example.com/category/1/",
+                  "type": "string"
+                }
+              },
+              "required": ["metadata", "url"],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "url": {
+            "description": "URL a of page.",
+            "example": "https://example.com/products/",
+            "type": "string"
+          }
+        },
+        "required": ["url", "metadata"],
+        "type": "object"
+      },
+      "RegularPrice": {
+        "description": "The price before any discount or special offer.\n",
+        "example": "199.00",
+        "pattern": "^[0-9]+(\\.[0-9]+)?$",
+        "type": "string"
+      },
+      "RequestHeaders": {
+        "description": "HTTP request headers.\n\nCan only be used in a\n[browser request](https://docs.zyte.com/zyte-api/usage/browser.html).\nFor\n[HTTP requests](https://docs.zyte.com/zyte-api/usage/http.html), see\n[customHttpRequestHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/customHttpRequestHeaders).\n\nAt the moment it only supports the\n[Referer header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer).\n\n[See an example](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-set-browser-headers).\n",
+        "properties": {
+          "referer": {
+            "description": "[Referer header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer).\n",
+            "example": "https://www.google.com/",
+            "type": "string"
+          }
+        }
+      },
+      "ResourceTypeFilter": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NetworkCaptureFilter"
+          },
+          {
+            "properties": {
+              "resourceType": {
+                "description": "A resource type for a network response to match:\n\n- `document` is the source HTML document, which might change\n  during browser rendering or through\n  [actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions).\n\n- `xhr` is a response obtained using\n  [XMLHttpRequest](http://devdoc.net/web/developer.mozilla.org/en-US/docs/XMLHttpRequest.1.html).\n",
+                "enum": ["document", "xhr"],
+                "type": "string"
+              }
+            }
+          },
+          {
+            "required": ["resourceType"]
+          }
+        ],
+        "description": "An object specifying how to capture responses by resource type"
+      },
+      "Response200": {
+        "properties": {
+          "actions": {
+            "description": "Debug information about the execution of the action sequence set in\nthe\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions)\nrequest field.\n\nAction order in the response always matches that of the request.\n",
+            "items": {
+              "$ref": "#/components/schemas/ActionResult"
+            },
+            "type": "array"
+          },
+          "article": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Article"
+              },
+              {
+                "description": "Article data.\n\nTo get this response field, set the\n[article](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/article)\nrequest field to `true`.\n"
+              }
+            ]
+          },
+          "articleList": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ArticleList"
+              },
+              {
+                "description": "Article list data.\n\nTo get this response field, set the\n[articleList](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/articleList)\nrequest field to `true`.\n"
+              }
+            ]
+          },
+          "articleNavigation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ArticleNavigation"
+              },
+              {
+                "description": "Article navigation data.\n\nTo get this response field, set the\n[articleNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/articleNavigation)\nrequest field to `true`.\n"
+              }
+            ]
+          },
+          "browserHtml": {
+            "description": "[Browser HTML](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-browser-html).\n\nTo get this response field, set the\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml)\nrequest field to `true`.\n\nBrowser HTML does not include the contents of\n[iframes](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe)\nor the\n[shadow DOM](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_shadow_DOM).\n\n[See an example](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-browser-html).\n",
+            "example": "<html>Downloaded data.</html>",
+            "type": "string"
+          },
+          "customAttributes": {
+            "properties": {
+              "metadata": {
+                "properties": {
+                  "error": {
+                    "description": "* The ``extraction/unparsable-response`` error is given when the LLM response could not be parsed or recovered.\n  If this error happens, we suggest simplifying the task or reducing the number of attributes.\n* The ``extraction/schema-size-exceeded`` error is given when the schema did not fit into the input limits,\n  leaving no space for the input text, and therefore the LLM could not be used. If this error happens, we suggest\n  either making the schema smaller (fewer attributes and/or shorter descriptions),\n  or increasing\n  [customAttributesOptions.maxInputTokens](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/customAttributesOptions.maxInputTokens).\n",
+                    "type": "string"
+                  },
+                  "excludedPIIAttributes": {
+                    "description": "A list of all attributes dropped from the output due to a risk of PII\n(Personally Identifiable Information) extraction.\n",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "inputTokens": {
+                    "description": "Total number of used input tokens, excluding our internal fixed prompt with the LLM instruction,\nwhen using the \"generate\" method.\n",
+                    "type": "integer"
+                  },
+                  "maxInputTokens": {
+                    "description": "Maximum number of allowed input tokens for the model, when using the \"generate\" method.\n",
+                    "type": "integer"
+                  },
+                  "outputTokens": {
+                    "description": "Total number of used output tokens, when using the \"generate\" method.\n",
+                    "type": "integer"
+                  },
+                  "textInputTokens": {
+                    "description": "Total number of input tokens used for the text of the web page, excluding\nthe schema and our internal fixed prompt with the LLM instruction,\nwhen using the \"generate\" method.\nAlready included in the [customAttributes.metadata.inputTokens](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/customAttributes.metadata.inputTokens)\nfield.\n",
+                    "type": "integer"
+                  },
+                  "textInputTokensBeforeTruncation": {
+                    "description": "textInputTokens before the text was truncated to fit into the input limits,\neither set via\n[customAttributesOptions.maxInputTokens](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/customAttributesOptions.maxInputTokens)\nor due to the model limitation returned in\n[customAttributes.metadata.maxInputTokens](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/customAttributes.metadata.maxInputTokens),\nwhen using the \"generate\" method.\n",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "values": {
+                "additionalProperties": true,
+                "description": "Values of extracted custom attributes, extracted according to the requested\n[customAttributes](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/customAttributes)\nschema.\n",
+                "type": "object"
+              }
+            },
+            "type": "object"
+          },
+          "echoData": {
+            "description": "Arbitrary data set on the\n[echoData](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/echoData)\nrequest field.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-metadata).\n",
+            "type": "object"
+          },
+          "forumThread": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ForumThread"
+              },
+              {
+                "description": "Forum thread data.\n\nTo get this response field, set the\n[forumThread](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/forumThread)\nrequest field to `true`.\n"
+              }
+            ]
+          },
+          "httpResponseBody": {
+            "description": "[Base64-encoded](https://en.wikipedia.org/wiki/Base64)\nHTTP response body.\n\nTo get this response field, set the\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseBody)\nrequest field to `true`.\n\nUnlike\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/browserHtml),\nthis field supports binary response bodies, such as image files or\nPDF files. This is the reason why this field is Base64-encoded,\nJSON does not support binary data.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/http.html#example-httpresponsebody).\n",
+            "format": "byte",
+            "type": "string"
+          },
+          "httpResponseHeaders": {
+            "description": "HTTP response headers.\n\nTo get this response field, set the\n[httpResponseHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseHeaders)\nrequest field to `true`.\n\nThe `Content-Encoding` header value (e.g. `gzip`, `br`, etc.)\nshould not be used to decompress\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/httpResponseBody),\nZyte API already decompresses the body of compressed responses.\n\nThe `Set-Cookie` header value, when present, contains the header\nvalue received from the main HTTP response. These cookies could\nhave changed later on, e.g. during browser rendering. Usually you\nwill want to ignore this header in favor of\n[responseCookies](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/responseCookies),\nwhich provides the *final* cookies.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-headers).\n",
+            "items": {
+              "$ref": "#/components/schemas/HTTPHeader"
+            },
+            "type": "array"
+          },
+          "jobId": {
+            "description": "[Scrapy Cloud](https://docs.zyte.com/scrapy-cloud/get-started.html)\njob ID set on the\n[jobId](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/jobId)\nrequest field.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-metadata).\n",
+            "example": "example-job-1",
+            "maxLength": 100,
+            "type": "string"
+          },
+          "jobPosting": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JobPosting"
+              },
+              {
+                "description": "Job posting data.\n\nTo get this response field, set the\n[jobPosting](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/jobPosting)\nrequest field to `true`.\n"
+              }
+            ]
+          },
+          "jobPostingNavigation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JobPostingNavigation"
+              },
+              {
+                "description": "Job posting navigation data.\n\nTo get this response field, set the\n[jobPostingNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/jobPostingNavigation)\nrequest field to `true`.\n"
+              }
+            ]
+          },
+          "networkCapture": {
+            "description": "Responses captured by filters specified in the\n[networkCapture](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/networkCapture)\nrequest parameter.\n",
+            "items": {
+              "$ref": "#/components/schemas/CapturedResponse"
+            },
+            "type": "array"
+          },
+          "pageContent": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PageContent"
+              },
+              {
+                "description": "Page content data.\n\nTo get this response field, set the\n[pageContent](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/pageContent)\nrequest field to `true`.\n"
+              }
+            ]
+          },
+          "product": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Product"
+              },
+              {
+                "description": "Product data.\n\nTo get this response field, set the\n[product](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/product)\nrequest field to `true`.\n"
+              }
+            ]
+          },
+          "productList": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductList"
+              },
+              {
+                "description": "Product list data.\n\nTo get this response field, set the\n[productList](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productList)\nrequest field to `true`.\n"
+              }
+            ]
+          },
+          "productNavigation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ProductNavigation"
+              },
+              {
+                "description": "Product navigation data.\n\nTo get this response field, set the\n[productNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productNavigation)\nrequest field to `true`.\n"
+              }
+            ]
+          },
+          "responseCookies": {
+            "description": "List of cookies set during the request.\n\nTo get this response field, set the\n[responseCookies](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/responseCookies)\nrequest field to `true`.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-cookies).\nSee also:\n[requestCookies](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestCookies).\n",
+            "items": {
+              "$ref": "#/components/schemas/Cookie"
+            },
+            "type": "array"
+          },
+          "screenshot": {
+            "description": "[Base64-encoded](https://en.wikipedia.org/wiki/Base64)\npage screenshot file data.\n\nTo get this response field, set the\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot)\nrequest field to `true`.\n\n[screenshotOptions.format](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshotOptions)\ndetermines the file format of the screenshot data.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-screenshot).\n",
+            "format": "byte",
+            "type": "string"
+          },
+          "serp": {
+            "$ref": "#/components/schemas/SearchResultsPage"
+          },
+          "session": {
+            "$ref": "#/components/schemas/Session"
+          },
+          "statusCode": {
+            "description": "The HTTP status code retrieved from the target page.\n\nIf\n[redirection is followed](https://docs.zyte.com/zyte-api/usage/http.html#zapi-redirection),\nthis is the status code of the response *after* redirection.\n\nSee also:\n[url](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/url).\n",
+            "example": 200,
+            "type": "integer"
+          },
+          "url": {
+            "description": "URL the data was extracted from.\n\nCould be different from the input URL in case of\n[redirection](https://docs.zyte.com/zyte-api/usage/http.html#zapi-redirection).\n\nSee also:\n[statusCode](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/statusCode).\n",
+            "example": "https://example.com/item-page/",
+            "type": "string"
+          }
+        },
+        "required": ["url"]
+      },
+      "ScreenshotOptions": {
+        "description": "Options for the screenshot taken when the\n[screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot)\nrequest field is `true`.\n",
+        "properties": {
+          "format": {
+            "default": "jpeg",
+            "description": "File format.\n\nJPEG screenshots are taken with a quality of 75%.\n",
+            "enum": ["png", "jpeg"],
+            "type": "string"
+          },
+          "fullPage": {
+            "default": false,
+            "description": "When `true`, the screenshot features the full page. When\n`false`, it features only what is visible on the browser window\n(viewport).\n\nFull page screenshots:\n\n-   Are only available in JPEG format.\n\n-   Have a minimum resolution of 1920x1080, i.e. for pages\n    smaller than 1920x1080, the screenshot looks the same\n    regardless of the value of `fullPage`.\n\n-   Any image exceeding 5000 (width) x 10000 (height) pixels will be clipped to those\n    dimensions.\n",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "SearchResultsPage": {
+        "description": "Search engine results page data.\n\nTo get this response field, set the\n[serp](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/serp)\nrequest field to `true`.\n",
+        "properties": {
+          "metadata": {
+            "$ref": "#/components/schemas/Metadata"
+          },
+          "organicResults": {
+            "description": "List of search results excluding paid results.\n",
+            "items": {
+              "$ref": "#/components/schemas/OrganicResult"
+            },
+            "type": "array"
+          },
+          "pageNumber": {
+            "description": "Page number.",
+            "minimum": 1,
+            "type": "integer"
+          },
+          "product": {
+            "$ref": "#/components/schemas/Product"
+          },
+          "url": {
+            "$ref": "#/components/schemas/SearchURL"
+          }
+        },
+        "type": "object"
+      },
+      "SearchURL": {
+        "additionalProperties": false,
+        "description": "Search URL.\n\nShould match\n[url](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/url).\n",
+        "example": "https://www.search.engine.com/search?q=squid+proxy",
+        "pattern": "^https?://[\\S]+$",
+        "type": "string"
+      },
+      "SerpOptions": {
+        "description": "Options for SERP extraction.",
+        "properties": {
+          "extractFrom": {
+            "description": "Input to use for extraction, either\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/httpResponseBody)\nor\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/response/200/browserHtml).\n\nIf not specified, `httpResponseBody` is currently used by default.\nIn the future, the default value may depend on the target website.\n",
+            "enum": ["browserHtml", "httpResponseBody"],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Session": {
+        "description": "Parameters to create or reuse a\n[client-managed session](https://docs.zyte.com/zyte-api/usage/features.html#client-managed-sessions).\n\nIf `id` does not match one of your running sessions, a new session is\ncreated with that session ID. Otherwise, the matching running session\nis reused.\n\nClient-managed sessions may expire due to any of the following:\n\n-   15 minutes (900 seconds) have passed since the session was created.\n\n-   2 minutes (120 seconds) have passed since the session use.\n\n-   For 3 times in a row, requests using this session got banned.\n\nFor 5-10 minutes after a session expires, Zyte API keeps track of the\nexpired session and does not allow re-using it. After that time,\nattempts to reuse the session will instead create a new session.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#client-managed-sessions).\n",
+        "example": {
+          "id": "ab837d21-f848-42b2-8e88-47ea9d84bad0"
+        },
+        "properties": {
+          "id": {
+            "description": "User-defined session ID.\n\nIt must be a\n[version 4 UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)),\ni.e. a randomly-generated UUID.\n",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "SessionContext": {
+        "description": "User-defined name-value pairs to\n[request a server-managed session](https://docs.zyte.com/zyte-api/usage/features.html#zapi-session-contexts)\ninitialized with\n[sessionContextParameters](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/sessionContextParameters)).\n\nFor every subsequent request with the same session context, Zyte API\nwill either reuse an available session created for the same session\ncontext or create a new session using\n[sessionContextParameters](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/sessionContextParameters)).\n\nServer-managed sessions expire after 4 hours or 3 ban responses. If you\nare targeting websites that silently expire their sessions before the\n4-hour mark, i.e. they revert the effects of your\n[sessionContextParameters](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/sessionContextParameters)\nbut requests continue working as expected otherwise, consider using\n[client-managed sessions](https://docs.zyte.com/zyte-api/usage/features.html#client-managed-sessions)\nfor higher session control.\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-session-contexts).\nSee also:\n[requestCookies](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/requestCookies),\n[responseCookies](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/responseCookies).\n",
+        "items": {
+          "maxItems": 10,
+          "properties": {
+            "name": {
+              "description": "Name of the context identifier.",
+              "maxLength": 30,
+              "minLength": 1,
+              "nullable": false,
+              "type": "string"
+            },
+            "value": {
+              "description": "Value of the context identifier.",
+              "maxLength": 100,
+              "minLength": 1,
+              "nullable": false,
+              "type": "string"
+            }
+          },
+          "required": ["name", "value"],
+          "type": "object"
+        },
+        "type": "array"
+      },
+      "SessionContextActionSequence": {
+        "description": "Actions to run to initialize a server-managed session for a given\n[sessionContext](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/sessionContext)).\n",
+        "items": {
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/click"
+            },
+            {
+              "$ref": "#/components/schemas/doubleClick"
+            },
+            {
+              "$ref": "#/components/schemas/evaluate"
+            },
+            {
+              "$ref": "#/components/schemas/goto"
+            },
+            {
+              "$ref": "#/components/schemas/hide"
+            },
+            {
+              "$ref": "#/components/schemas/hover"
+            },
+            {
+              "$ref": "#/components/schemas/interaction"
+            },
+            {
+              "$ref": "#/components/schemas/keyPress"
+            },
+            {
+              "$ref": "#/components/schemas/reload"
+            },
+            {
+              "$ref": "#/components/schemas/scrollBottom"
+            },
+            {
+              "$ref": "#/components/schemas/scrollTo"
+            },
+            {
+              "$ref": "#/components/schemas/searchKeyword"
+            },
+            {
+              "$ref": "#/components/schemas/select"
+            },
+            {
+              "$ref": "#/components/schemas/setLocation"
+            },
+            {
+              "$ref": "#/components/schemas/type"
+            },
+            {
+              "$ref": "#/components/schemas/waitForNavigation"
+            },
+            {
+              "$ref": "#/components/schemas/waitForRequest"
+            },
+            {
+              "$ref": "#/components/schemas/waitForResponse"
+            },
+            {
+              "$ref": "#/components/schemas/waitForSelector"
+            },
+            {
+              "$ref": "#/components/schemas/waitForTimeout"
+            }
+          ]
+        },
+        "type": "array"
+      },
+      "SessionContextParameters": {
+        "description": "Parameters to create a server-managed session for a given\n[sessionContext](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/sessionContext)).\n\n[See an example](https://docs.zyte.com/zyte-api/usage/features.html#zapi-session-contexts).\nSee also:\n[actions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/actions).\n",
+        "properties": {
+          "actions": {
+            "$ref": "#/components/schemas/SessionContextActionSequence"
+          }
+        },
+        "type": "object"
+      },
+      "Size": {
+        "description": "A standardized size of a product,\nspecified through a simple textual string (for example \"XL\", \"32Wx34L\").\nA single product dimension (height, width) is not considered as the size.\n",
+        "example": "XL",
+        "type": "string"
+      },
+      "Sku": {
+        "description": "The Stock Keeping Unit (SKU), i.e. a merchant-specific identifier\nfor the product - identifier assigned by the seller.\n\n![](https://docs.zyte.com/_static/images/schemas/sku.png)\n",
+        "example": "A123DK9823",
+        "type": "string"
+      },
+      "Style": {
+        "description": "Style of the product.\nIt can also be referred as pattern/finish on the product page.\nExample values: \"Polka dots\", \"Striped\",\n\"Nickel finish with Translucent glass\", etc.\n",
+        "example": "Striped",
+        "type": "string"
+      },
+      "URL": {
+        "additionalProperties": false,
+        "pattern": "^https?://[\\S]+$",
+        "type": "string"
+      },
+      "Url": {
+        "description": "URL of a page where this product was extracted.",
+        "example": "https://example.com/product/",
+        "type": "string"
+      },
+      "UrlFilter": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NetworkCaptureFilter"
+          },
+          {
+            "properties": {
+              "matchType": {
+                "$ref": "#/components/schemas/PatternMatchingOptions"
+              },
+              "value": {
+                "description": "A string to compare with the URL of network responses according\nto `matchType`.\n",
+                "maxLength": 8192,
+                "minLength": 3,
+                "type": "string"
+              }
+            }
+          },
+          {
+            "required": ["value", "matchType"]
+          }
+        ],
+        "description": "An object specifying how to capture responses by matching URL"
+      },
+      "UrlPattern": {
+        "description": "A string to compare with a URL according to `urlMatchingOptions`.\n",
+        "example": ["https://example.com/api", "/api/store/fulfilment"],
+        "type": "string"
+      },
+      "Viewport": {
+        "description": "[Browser viewport](https://developer.mozilla.org/en-US/docs/Glossary/Viewport).\n",
+        "properties": {
+          "height": {
+            "default": 1080,
+            "description": "Viewport height, in pixels.",
+            "maximum": 4096,
+            "minimum": 360,
+            "type": "integer"
+          },
+          "width": {
+            "default": 1920,
+            "description": "Viewport width, in pixels.",
+            "maximum": 5120,
+            "minimum": 320,
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "Weight": {
+        "properties": {
+          "rawUnit": {
+            "description": "A unit of weight without normalization - how it was extracted from the page.\nNormalized version of the rawUnit is in 'unit' attribute.\n",
+            "example": "kg",
+            "type": "string"
+          },
+          "unit": {
+            "description": "A normalized unit of weight, like kilogram / ounce / pound and others.\n",
+            "example": "kilogram",
+            "type": "string"
+          },
+          "value": {
+            "description": "A weight value expressed as a floating point number.\n",
+            "example": 120,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "click": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Click on an element.",
+                "enum": ["click"]
+              },
+              "button": {
+                "default": "left",
+                "description": "Mouse button to click",
+                "enum": ["left", "right", "middle"],
+                "type": "string"
+              },
+              "delay": {
+                "default": 0,
+                "description": "Time to wait between mousedown and mouseup, in seconds.",
+                "maximum": 3,
+                "minimum": 0,
+                "type": "number"
+              },
+              "selector": {
+                "$ref": "#/components/schemas/ActionSelector"
+              },
+              "waitForNavigationTimeout": {
+                "default": 0,
+                "description": "Maximum waiting time in seconds for the navigation event during the click action.\n\nIf navigation happens within the defined duration, then\nwaiting is halted and the next action is executed after the new\nis page is loaded. If the page loading does not finish then the next action\nends with an error, and following actions may not be executed, depending\non the onError property. If no navigation happens within the defined\nduration then the next action is executed.\n",
+                "maximum": 20,
+                "minimum": 0,
+                "type": "number"
+              }
+            },
+            "required": ["selector", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "doubleClick": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Double click on an element.",
+                "enum": ["doubleClick"]
+              },
+              "selector": {
+                "$ref": "#/components/schemas/ActionSelector"
+              }
+            },
+            "required": ["selector", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "evaluate": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Run JavaScript code in the page context.\n\nThis is a very powerful action. Use cases include:\n\n-   Sending an API request from the page context, and writing\n    the response somewhere in the DOM, so that the\n    [browser HTML](https://docs.zyte.com/zyte-api/usage/browser.html#zapi-browser-html)\n    output includes it.\n",
+                "enum": ["evaluate"]
+              },
+              "source": {
+                "description": "JavaScript code to run.",
+                "maxLength": 2000,
+                "type": "string"
+              }
+            },
+            "required": ["source", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "goto": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Navigate to a new page.\n\nThis action waits until page load event is fired with a default timeout\nof 30 seconds.\n",
+                "enum": ["goto"]
+              },
+              "options": {
+                "$ref": "#/components/schemas/GoToOptions"
+              },
+              "url": {
+                "description": "URL to navigate page to. The url should include scheme",
+                "type": "string"
+              }
+            },
+            "required": ["url", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "hide": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Hide an element.",
+                "enum": ["hide"]
+              },
+              "selector": {
+                "$ref": "#/components/schemas/ActionSelector"
+              }
+            },
+            "required": ["action", "selector"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "hover": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Hover over a visible element.\n\nElements that are either hidden or not present will cause the action to\nexit with an error.\n",
+                "enum": ["hover"]
+              },
+              "selector": {
+                "$ref": "#/components/schemas/ActionSelector"
+              }
+            },
+            "required": ["selector", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "interaction": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Execute a\n[browser script](https://docs.zyte.com//zyte-api/ide/index.html#creating-a-new-script).\n",
+                "enum": ["interaction"]
+              },
+              "args": {
+                "description": "Input arguments",
+                "type": "object"
+              },
+              "id": {
+                "description": "Script identifier",
+                "type": "string"
+              }
+            },
+            "required": ["id", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "keyPress": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Press a key on the keyboard.",
+                "enum": ["keyPress"]
+              },
+              "key": {
+                "description": "Key to press.\n\nA single character or special key from the [list of supported\nkeys](https://docs.zyte.com/zyte-api/ide/api/index.html#Page.keyPress).\n\nKey names are case-sensitive.\n\nOnly one key can be executed at a time. Key combinations are\nnot supported.\n",
+                "maxLength": 14,
+                "type": "string"
+              }
+            },
+            "required": ["key", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "onError": {
+        "default": "return",
+        "description": "Handle errors encountered while executing a particular action.\n* continue - When a particular action fails, the action sequence continues, executing the next actions\n* return - When a particular actions fails, the action sequence stops, not executing any more actions\n\nWhen an action sequence finishes prematurely the service will return the entire response body up until the\npoint of execution.\n",
+        "enum": ["continue", "return"],
+        "type": "string"
+      },
+      "reload": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Reload the page.\n\nThis action waits until page load event is fired with a default timeout\nof 30 seconds.\n",
+                "enum": ["reload"]
+              },
+              "options": {
+                "$ref": "#/components/schemas/GoToOptions"
+              }
+            },
+            "required": ["action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "schemas-Metadata": {
+        "description": "Extracted item metadata for single-item data types.",
+        "properties": {
+          "dateDownloaded": {
+            "$ref": "#/components/schemas/DateDownloaded"
+          },
+          "probability": {
+            "description": "Probability that extracted item is of requested data type.\nIt is closer to 0 in case this page does not contain requested data type.\nFor example, when single product extraction is requested with\n\"product: true\", but a page does not contain a product,\nprobability would be close to 0.\nIf an item of requested type can be extracted from a page,\nthen probability is closer to 1.\nRecommended probability threshold is 0.5,\nbut we will return extracted data even if probability is very low.\n",
+            "example": 0.87,
+            "maximum": 1,
+            "minimum": 0,
+            "type": "number"
+          }
+        },
+        "required": ["probability", "dateDownloaded"],
+        "type": "object"
+      },
+      "scrollBottom": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Continuously scroll down the page while it keeps loading more content.\n\nThe action halts if any of the following conditions are met:\n\n  - the timeout or the total browser execution time is reached\n  - the page does not load any new content for the duration of\n    maxScrollDelay\n  - maxPageHeight or maxScrollCount have been reached\n",
+                "enum": ["scrollBottom"]
+              },
+              "maxPageHeight": {
+                "description": "Maximum height (in pixels) until which the browser keeps scrolling down the page",
+                "type": "integer"
+              },
+              "maxScrollCount": {
+                "description": "The maximum number of scrolls to perform.\n\nIf the page does not yield any fresh content, then the action\nwill finish execution before maxScrollCount is reached.\n",
+                "type": "integer"
+              },
+              "maxScrollDelay": {
+                "default": 1.5,
+                "description": "The maximum amount of time to wait for each scroll to complete,\nin seconds.\n\nIf the page does not not load any content during this time, the\naction is deemed to have been completed.\n",
+                "maximum": 10,
+                "minimum": 0.5,
+                "type": "number"
+              },
+              "scrollStep": {
+                "default": 0,
+                "description": "The number of pixels for each scroll.\nIt can be used for gradual scrolling.\nIf it's specified, maxScrollDelay will be used as fixed time waiting instead of waiting for new contents.\n",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "timeout": {
+                "default": 15,
+                "description": "Maximum wait time, in seconds.",
+                "maximum": 30,
+                "minimum": 0,
+                "type": "number"
+              }
+            },
+            "required": ["action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "scrollTo": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Scroll the window to a particular place in the document.\n\nTo set the target location, use one (and only one) of the following:\n\n- `top` and `left`, to set the target coordinates in pixels.\n\n- `selector`, to target the center of an HTML element.\n",
+                "enum": ["scrollTo"]
+              },
+              "left": {
+                "default": 0,
+                "description": "Specifies the number of pixels along the X axis to scroll the window.",
+                "type": "integer"
+              },
+              "selector": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ActionSelector"
+                  },
+                  {
+                    "description": "If passed scrolls to specified selector instead of scrolling to specified coordinates within page. If selector is not found no scroll is performed. If more than one elements match selector it scrolls to the first one."
+                  }
+                ]
+              },
+              "top": {
+                "description": "Specifies the number of pixels along the Y axis to scroll the window.",
+                "type": "integer"
+              }
+            },
+            "required": ["action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "searchKeyword": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Perform keyword search on the page.\n\nThis action uses website-specific knowledge to find and use a search\nbox.\n\nIt may not work on some websites. If that\u2019s the case, please\n[reach out to us](https://support.zyte.com/support/tickets/new).\n\nIf there is no search box on a page, an error is returned.\n",
+                "enum": ["searchKeyword"]
+              },
+              "keyword": {
+                "description": "The keyword to be searched for",
+                "type": "string"
+              }
+            },
+            "required": ["keyword", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "select": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Pick single or multiple values from a `<select>` element.\n",
+                "enum": ["select"]
+              },
+              "selector": {
+                "$ref": "#/components/schemas/ActionSelector"
+              },
+              "values": {
+                "description": "Values of options to select.\n\nIf the `<select>` has the multiple attribute, all values are\nconsidered, otherwise only the first one is taken into account.\n",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            },
+            "required": ["selector", "values", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "setLocation": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Configure a physical address on the website.\n\nThis action uses website-specific knowledge to find and fill a location\nform.\n\nIt may not work on some websites. If that\u2019s the case, please\n[reach out to us](https://support.zyte.com/support/tickets/new).\n",
+                "enum": ["setLocation"]
+              },
+              "address": {
+                "$ref": "#/components/schemas/PostalAddress"
+              }
+            },
+            "required": ["action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "type": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Type text into an element.",
+                "enum": ["type"]
+              },
+              "delay": {
+                "default": 0,
+                "description": "Time to wait between key presses, in seconds.",
+                "minimum": 0,
+                "type": "number"
+              },
+              "selector": {
+                "$ref": "#/components/schemas/ActionSelector"
+              },
+              "text": {
+                "description": "Text to type into a focused element.\n\nTo press a special key, use the `keyPress` action instead.\n",
+                "type": "string"
+              }
+            },
+            "required": ["selector", "text", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "waitForNavigation": {
+        "allOf": [
+          {
+            "nullable": false,
+            "properties": {
+              "action": {
+                "description": "Wait until the page navigates to a new URL or reloads.\n\nIf `waitForNavigation` is the first action, the specified options will\nbe applied to the initial navigation. Use it if the default timeout of\n30 seconds or the default `waitUntil` value (`load`) is not sufficient\nfor the initial navigation.\n\nMind, however, that using `waitForNavigation` as the first action has\nan important drawback: any error with the initial navigation will\nnonetheless result in a successful API response, as any other [browser\naction failure](https://docs.zyte.com/zyte-api/usage/errors.html#zapi-action-errors).\n",
+                "enum": ["waitForNavigation"]
+              },
+              "timeout": {
+                "default": 31,
+                "description": "Maximum wait time, in seconds.\n",
+                "maximum": 45,
+                "minimum": 31,
+                "type": "number"
+              },
+              "waitUntil": {
+                "default": "load",
+                "description": "When to consider that navigation succeeded:\n- `load` - [load event](https://developer.mozilla.org/en-US/docs/Web/API/Window/load_event), default.\n- `domcontentloaded` - [DOMContentLoaded event](https://developer.mozilla.org/en-US/docs/Web/API/Window/DOMContentLoaded_event).\n- `networkidle0` - no ongoing network connections for at least\n   0.5 seconds.\n",
+                "enum": ["load", "domcontentloaded", "networkidle0"],
+                "type": "string"
+              }
+            },
+            "required": ["timeout", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "waitForRequest": {
+        "allOf": [
+          {
+            "example": [
+              {
+                "urlPattern": "https://example.org/store/api"
+              },
+              {
+                "urlMatchingOptions": "contains",
+                "urlPattern": "api/store"
+              },
+              {
+                "urlMatchingOptions": "startsWith",
+                "urlPattern": "https://example.org/"
+              }
+            ],
+            "properties": {
+              "action": {
+                "description": "Wait until the request to a specific URL has been sent.",
+                "enum": ["waitForRequest"]
+              },
+              "timeout": {
+                "$ref": "#/components/schemas/ActionTimeout"
+              },
+              "urlMatchingOptions": {
+                "$ref": "#/components/schemas/PatternMatchingOptions"
+              },
+              "urlPattern": {
+                "$ref": "#/components/schemas/UrlPattern"
+              }
+            },
+            "required": ["urlPattern", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "waitForResponse": {
+        "allOf": [
+          {
+            "example": [
+              {
+                "urlMatchingOptions": "contains",
+                "urlPattern": "/store/api"
+              },
+              {
+                "urlMatchingOptions": "startsWith",
+                "urlPattern": "https://example.org/store/"
+              }
+            ],
+            "properties": {
+              "action": {
+                "description": "Wait until the response from a specific URL has been received.",
+                "enum": ["waitForResponse"]
+              },
+              "timeout": {
+                "$ref": "#/components/schemas/ActionTimeout"
+              },
+              "urlMatchingOptions": {
+                "$ref": "#/components/schemas/PatternMatchingOptions"
+              },
+              "urlPattern": {
+                "$ref": "#/components/schemas/UrlPattern"
+              }
+            },
+            "required": ["urlPattern", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "waitForSelector": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Wait for the selector to appear.\n\nIf at the moment of calling the method the selector already\nexists, the action will return immediately.\n\nAlso, the action will return immediately after the first matching\nselector appears.\n\nFor a usage example, see the\n[web scraping tutorial](https://docs.zyte.com/web-scraping/tutorial/js.html#tutorial-actions).\n",
+                "enum": ["waitForSelector"]
+              },
+              "selector": {
+                "$ref": "#/components/schemas/ActionSelector"
+              },
+              "timeout": {
+                "$ref": "#/components/schemas/ActionTimeout"
+              }
+            },
+            "required": ["selector", "action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      },
+      "waitForTimeout": {
+        "allOf": [
+          {
+            "properties": {
+              "action": {
+                "description": "Pause script execution for the given number of seconds before\ncontinuing.\n\nIf the value of timeout is greater than the remaining browser\nexecution time, then this action ends with an error.\n",
+                "enum": ["waitForTimeout"]
+              },
+              "timeout": {
+                "$ref": "#/components/schemas/ActionTimeout"
+              }
+            },
+            "required": ["action"]
+          },
+          {
+            "$ref": "#/components/schemas/Action"
+          }
+        ]
+      }
+    },
+    "securitySchemes": {
+      "BasicAuth": {
+        "scheme": "basic",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "contact": {
+      "name": "Zyte (Formerly Scrapinghub)",
+      "url": "https://www.zyte.com"
+    },
+    "description": "A single API for web scraping",
+    "title": "Web Data Extraction API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.3",
+  "paths": {
+    "/extract": {
+      "post": {
+        "description": "Process a single URL, return the result.\n\nThis endpoint blocks until the result is ready.\nIt is intended for short-running operations.\n\nAt least one of the following request fields must be set to true:\n  - [browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml)\n  - [httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseBody)\n  - [httpResponseHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseHeaders)\n  - [screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot)\n  - An automatic extraction request field:\n      - [article](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/article)\n      - [articleList](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/articleList)\n      - [articleNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/articleNavigation)\n      - [forumThread](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/forumThread)\n      - [jobPosting](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/jobPosting)\n      - [jobPostingNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/jobPostingNavigation)\n      - [pageContent](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/pageContent)\n      - [product](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/product)\n      - [productList](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productList)\n      - [productNavigation](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productNavigation)\n      - [serp](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/serp)\n\nAll automatic extraction data types support performing extraction using\neither a browser request or an HTTP request. Choose which using the\ncorresponding `extractFrom` option, e.g.\n[productOptions.extractFrom](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productOptions.extractFrom)\nwhen extracting a [product](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/product).\n\nWhen no option is specified, currently automatic extraction defaults to\nusing a browser request, except for\n[serp](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/serp),\nwhere an HTTP request is used by default instead. In the future,\nhowever, the default value may depend on the target website.\n\nWhen automatic extraction uses a browser request, it can be combined\nwith any fields compatible with\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml),\ne.g. [screenshot](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/screenshot).\nWhen automatic extraction uses an HTTP request, it can be combined with\nany fields compatible with\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseBody).\n[serp](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/serp)\ncannot be combined with any other fields besides\n[serpOptions](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/serpOptions) and\n[url](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/url).\n\nYou cannot combine multiple automatic extraction request fields (e.g.\n[product](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/product)\nand [productList](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/productList))\non the same request.\n\nYou cannot combine\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseBody)\nwith a request field that is exclusive of browser requests (e.g.\n[httpResponseBody](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseBody)\nand\n[browserHtml](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/browserHtml)).\n\n[httpResponseHeaders](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/httpResponseHeaders)\ncan be requested alone or with any other valid combination of request\nfields except for\n[serp](https://docs.zyte.com/zyte-api/usage/reference.html#operation/extract/request/serp).\n\nThe request body size limit is 5MiB.\n",
+        "operationId": "extract",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "DownloadCustomHttpRequestHeaders": {
+                  "summary": "Retrieve raw HTTP content from a page, using custom HTTP headers",
+                  "value": {
+                    "customHttpRequestHeaders": [
+                      {
+                        "name": "X-APOLLO-OPERATION-NAME",
+                        "value": "nearByNodes"
+                      }
+                    ],
+                    "httpResponseBody": true,
+                    "url": "https://example.com"
+                  }
+                },
+                "DownloadHtml": {
+                  "summary": "Open a page in a browser, return HTML",
+                  "value": {
+                    "browserHtml": true,
+                    "url": "https://example.com"
+                  }
+                },
+                "DownloadHtmlActions": {
+                  "description": "1. Open the target page in a browser\n2. Type \"Zyte\" in the search box\n3. Click the Search button\n4. Wait for the results page to load\n",
+                  "summary": "actions example",
+                  "value": {
+                    "actions": [
+                      {
+                        "action": "type",
+                        "selector": {
+                          "type": "css",
+                          "value": "#searchbox"
+                        },
+                        "text": "Zyte"
+                      },
+                      {
+                        "action": "click",
+                        "selector": {
+                          "type": "css",
+                          "value": "#searchbtn"
+                        }
+                      }
+                    ],
+                    "browserHtml": true,
+                    "url": "https://example.com/search"
+                  }
+                },
+                "DownloadHtmlEchoData": {
+                  "description": "Open a page in a browser, return HTML.\n\nPass the echoData and jobId fields through - they'll be\nreturned unchanged in the output.\n",
+                  "summary": "echoData and jobId example",
+                  "value": {
+                    "browserHtml": true,
+                    "echoData": {
+                      "foo": "bar",
+                      "seedUrl": "https://example.com"
+                    },
+                    "jobId": "123/234/12",
+                    "url": "https://example.com/foo"
+                  }
+                },
+                "DownloadHtmlWithRequestHeaders": {
+                  "summary": "Open a page in a browser and return HTML, setting a proper Referer header",
+                  "value": {
+                    "browserHtml": true,
+                    "requestHeaders": {
+                      "referer": "https://www.google.com"
+                    },
+                    "url": "https://example.com"
+                  }
+                },
+                "DownloadHttp": {
+                  "summary": "Retrieve raw HTTP content from a page",
+                  "value": {
+                    "httpResponseBody": true,
+                    "url": "https://example.com"
+                  }
+                },
+                "DownloadHttpHeaders": {
+                  "summary": "Retrieve HTTP headers from a page using a POST request",
+                  "value": {
+                    "httpResponseHeaders": true,
+                    "url": "https://example.com"
+                  }
+                },
+                "DownloadHttpPostWithHttpRequestBody": {
+                  "summary": "Retrieve raw HTTP content from a page using a POST request",
+                  "value": {
+                    "customHttpRequestHeaders": [
+                      {
+                        "name": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "httpRequestBody": "WyJCV0kiLCAiRkxMIl0=",
+                    "httpRequestMethod": "POST",
+                    "httpResponseBody": true,
+                    "url": "https://example.com"
+                  }
+                },
+                "DownloadHttpPostWithHttpRequestText": {
+                  "summary": "Retrieve raw HTTP content from a page using a POST request",
+                  "value": {
+                    "customHttpRequestHeaders": [
+                      {
+                        "name": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "httpRequestMethod": "POST",
+                    "httpRequestText": "{\"name\":\"John Doe\",\"email\":\"johndoe@example.com\",\"age\":32,\"address\":{\"street\":\"123 Main St\",\"city\":\"Anytown\",\"state\":\"CA\",\"zip\":\"12345\"},\"phone_numbers\":[\"+1 555 555 1212\",\"+1 555 555 1313\"]}",
+                    "httpResponseBody": true,
+                    "url": "https://example.com"
+                  }
+                },
+                "DownloadScreenshot": {
+                  "summary": "Open a page in a browser and return a JPEG screenshot\nof the content visible on the browser window\n",
+                  "value": {
+                    "screenshot": true,
+                    "url": "https://example.com"
+                  }
+                },
+                "DownloadScreenshotFullPagePng": {
+                  "summary": "Open a page in a browser and return a full-page PNG\nscreenshot\n",
+                  "value": {
+                    "screenshot": true,
+                    "screenshotOptions": {
+                      "format": "png",
+                      "fullPage": true
+                    },
+                    "url": "https://example.com"
+                  }
+                },
+                "ExtractArticleCustomAttributes": {
+                  "description": "Extract Custom Attributes along with Article information.\n",
+                  "summary": "Extract Custom Attributes along with Article information",
+                  "value": {
+                    "article": true,
+                    "customAttributes": {
+                      "article_sentiment": {
+                        "enum": ["positive", "negative", "neutral"],
+                        "type": "string"
+                      },
+                      "summary": {
+                        "description": "A two sentence article summary",
+                        "type": "string"
+                      }
+                    },
+                    "url": "https://example.com/foo"
+                  }
+                },
+                "ExtractProduct": {
+                  "description": "Extract Product information from a page:\nprice, name, etc.\n",
+                  "summary": "Extract Product information",
+                  "value": {
+                    "product": true,
+                    "url": "https://example.com/foo"
+                  }
+                },
+                "ExtractProductRaw": {
+                  "description": "Extract Product information using an HTTP request.\n",
+                  "summary": "Extract Product information using an HTTP request",
+                  "value": {
+                    "product": true,
+                    "productOptions": {
+                      "extractFrom": "httpResponseBody"
+                    },
+                    "url": "https://example.com/foo"
+                  }
+                },
+                "ExtractProductRawWithBody": {
+                  "description": "Extract Product information using an HTTP request,\nas well as httpResponseBody and httpResponseHeaders.\nMake a request from Spain.\n",
+                  "summary": "Extract Product information, as well as httpResponseBody",
+                  "value": {
+                    "geolocation": "ES",
+                    "httpResponseBody": true,
+                    "httpResponseHeaders": true,
+                    "product": true,
+                    "productOptions": {
+                      "extractFrom": "httpResponseBody"
+                    },
+                    "url": "https://example.com/foo"
+                  }
+                },
+                "ExtractProductWithHtml": {
+                  "description": "Extract Product information, as well as browser HTML.\nMake a request from Spanish geolocation.\n",
+                  "summary": "Extract Product information, as well as browser HTML",
+                  "value": {
+                    "browserHtml": true,
+                    "geolocation": "ES",
+                    "product": true,
+                    "url": "https://example.com/foo"
+                  }
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/ExtractRequest"
+              }
+            }
+          },
+          "description": "An extraction request body",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response200"
+                }
+              }
+            },
+            "description": "Successful response. Contains the output requested."
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "Invalid JSON value": {
+                    "value": {
+                      "detail": "The submitted request body is not a valid JSON. Location: line 2, column 26. Details: Unrecognized token 'False': was expecting (JSON String, Number, Array, Object or token 'null', 'true' or 'false')",
+                      "status": 400,
+                      "title": "Invalid JSON",
+                      "type": "/request/invalid-json"
+                    }
+                  },
+                  "Unrecognized field": {
+                    "value": {
+                      "detail": "Unrecognized field \"foo\"",
+                      "status": 400,
+                      "title": "Bad Request",
+                      "type": "/request/invalid"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Malformed request. See the error details to identify the exact problem in the request.\n"
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "Invalid API key": {
+                    "value": {
+                      "detail": "The authentication key is not valid or can't be matched.",
+                      "status": 401,
+                      "title": "Authentication Key Not Found",
+                      "type": "/auth/key-not-found"
+                    }
+                  },
+                  "Invalid authentication data": {
+                    "value": {
+                      "detail": "No valid authentication info found in the request. Check the documentation for the correct authentication schema.",
+                      "status": 401,
+                      "title": "Authentication Info Invalid",
+                      "type": "/auth/not-valid"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Authentication problem. See the error details.\n",
+            "headers": {
+              "WWW-Authenticate": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "Account suspended": {
+                    "value": {
+                      "detail": "Account is suspended, check billing details.",
+                      "status": 403,
+                      "title": "Account Suspended",
+                      "type": "/auth/account-suspended"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Your account is suspended or not allowed to make the request.\n"
+          },
+          "421": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "Incompatible parameters": {
+                    "value": {
+                      "detail": "The domain is invalid or unreachable. Please check the domain name and try again. Verify the domain name and ensure it is registered and valid before restarting the crawl.",
+                      "status": 421,
+                      "title": "Domain Unreachable",
+                      "type": "/website/domain-unreachable"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "The request failed and should not be retried\n"
+          },
+          "422": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "Incompatible parameters": {
+                    "value": {
+                      "detail": "Incompatible parameters were found in the request. Check details",
+                      "status": 422,
+                      "title": "Unprocessable Request",
+                      "type": "/request/unprocessable"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "The request couldn't be processed. Check the details.\n"
+          },
+          "429": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "Domain limit": {
+                    "value": {
+                      "detail": "Too many requests. Retry in N seconds from 'Retry-After' header.",
+                      "status": 429,
+                      "title": "Over Domain Requests Limit",
+                      "type": "/limits/over-domain-limit"
+                    }
+                  },
+                  "Organisation limit": {
+                    "value": {
+                      "detail": "Too many requests to a specific domain. Retry in N seconds from 'Retry-After' header.",
+                      "status": 429,
+                      "title": "Over Organisation Requests limit for the requested domain",
+                      "type": "/limits/over-org-domain-limit"
+                    }
+                  },
+                  "User limit": {
+                    "value": {
+                      "detail": "Too many requests to a specific domain. Retry in N seconds from 'Retry-After' header.",
+                      "status": 429,
+                      "title": "Over User Requests Limit",
+                      "type": "/limits/over-user-limit"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Too many requests, see the details.\n",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "format": "int32",
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "451": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "Domain forbidden": {
+                    "value": {
+                      "blockedDomain": "blocked-domain.example",
+                      "detail": "Extraction for the domain is forbidden.",
+                      "status": 451,
+                      "title": "Domain Forbidden",
+                      "type": "/download/domain-forbidden"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ForbiddenDomainProblem"
+                }
+              }
+            },
+            "description": "Extraction for the domain is forbidden.\n"
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "Internal error": {
+                    "value": {
+                      "detail": "The server encountered an internal error. Please contact support or wait for us to resolve the issue.",
+                      "status": 500,
+                      "title": "Internal Server Error",
+                      "type": "/server/internal"
+                    }
+                  },
+                  "Timeout": {
+                    "value": {
+                      "detail": "The request took too long and timed out. Try it again. Contact support if it fails consistently.",
+                      "status": 500,
+                      "title": "Request Timed Out",
+                      "type": "/server/timed-out"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Request timeout or internal server error.\n"
+          },
+          "503": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "Global request limit": {
+                    "value": {
+                      "detail": "Too many requests to the service. Retry in N seconds from 'Retry-After' header.",
+                      "status": 503,
+                      "title": "Global Requests Limit Reached",
+                      "type": "/limits/over-global-limit"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "System overload. See the details.\n",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "format": "int32",
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "520": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "Website ban": {
+                    "value": {
+                      "detail": "Zyte API could not get a ban-free response in a reasonable time. See https://docs.zyte.com/zyte-api/usage/errors.html#ban-responses",
+                      "status": 520,
+                      "title": "Website Ban",
+                      "type": "/download/temporary-error"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "A downloading error, possibly requiring user action.\n",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "format": "int32",
+                  "minimum": 0,
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "521": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "Internal download error": {
+                    "value": {
+                      "detail": "Server encountered a problem while downloading. Check request and contact support.",
+                      "status": 521,
+                      "title": "Internal Downloading Error",
+                      "type": "/download/internal-error"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Permanent downloading error.\n"
+          },
+          "default": {
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Problem"
+                }
+              }
+            },
+            "description": "Error. Check the code and problem object for additional information.\nNote: The client should be ready for the absence of a problem object.\nIn this case, the HTTP status code should be used.\n"
+          }
+        },
+        "summary": "Process a single URL, return the result"
+      }
+    }
+  },
+  "security": [],
+  "servers": [
+    {
+      "description": "Zyte Extraction API Production server",
+      "url": "https://api.zyte.com/v1"
+    }
+  ]
+}
