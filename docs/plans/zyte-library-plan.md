@@ -32,7 +32,10 @@ Create a fully fledged, clean Node.js TypeScript package for Zyte API `POST /v1/
 
 ### Consequences
 - The checked-in generated types are not manually edited; changes go through `scripts/generate-openapi-types.mjs`.
-- Generated types may be broad for highly dynamic `additionalProperties`/custom attribute shapes, but every schema and endpoint field remains represented.
+- Generated types are strict for schema-defined objects and remain broad only for
+  explicitly dynamic `additionalProperties`/custom attribute/free-form shapes,
+  so every schema and endpoint field remains represented without accepting
+  arbitrary keys where the schema defines a closed shape.
 - Runtime code remains manually reviewed and covered; generated code is typechecked and golden-tested but excluded from runtime coverage thresholds.
 
 ## OpenAPI type-generation contract
@@ -48,8 +51,8 @@ Create a fully fledged, clean Node.js TypeScript package for Zyte API `POST /v1/
   - `oneOf`/`anyOf` as unions.
   - enums as string/number literal unions.
   - `nullable` as `| null`.
-  - `additionalProperties` as index signatures / records.
-  - arrays, objects, primitive formats, and free-form schemas as `unknown` where the OpenAPI schema is deliberately unconstrained.
+  - `additionalProperties` as index signatures / records only when explicitly declared.
+  - arrays, objects, primitive formats, and free-form schemas as `unknown` or records where the OpenAPI schema is deliberately unconstrained.
 - Acceptance check:
   - `npm run generate:types -- --check` fails if generated output is stale.
   - A test asserts all 101 OpenAPI schema names are represented in the generated source.

@@ -205,13 +205,20 @@ function objectType(schema, names) {
   const properties = isRecord(schema.properties) ? schema.properties : {};
   const entries = Object.entries(properties);
   const required = new Set(Array.isArray(schema.required) ? schema.required : []);
+  const hasAdditional = Object.hasOwn(schema, "additionalProperties");
   const additional = schema.additionalProperties;
 
   if (entries.length === 0) {
+    if (!hasAdditional) {
+      return "Readonly<Record<string, unknown>>";
+    }
+    if (additional === false) {
+      return "Readonly<Record<string, never>>";
+    }
     if (isRecord(additional) || additional === true) {
       return `Readonly<Record<string, ${additional === true ? "unknown" : schemaType(additional, names)}>>`;
     }
-    return "Readonly<Record<string, unknown>>";
+    return "Readonly<Record<string, never>>";
   }
 
   const lines = entries.map(([name, propertySchema]) => {
@@ -219,8 +226,10 @@ function objectType(schema, names) {
     return `  readonly ${propertyName(name)}${marker}: ${schemaType(propertySchema, names)};`;
   });
 
-  if (additional !== false) {
-    lines.push("  readonly [key: string]: unknown;");
+  if (hasAdditional && additional !== false) {
+    lines.push(
+      `  readonly [key: string]: ${additional === true ? "unknown" : schemaType(additional, names)};`,
+    );
   }
 
   return `Readonly<{\n${lines.join("\n")}\n}>`;

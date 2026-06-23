@@ -1,6 +1,6 @@
 {
   "name": "zyte-api",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Node.js TypeScript client for Zyte API /v1/extract.",
   "type": "module",
   "engines": {

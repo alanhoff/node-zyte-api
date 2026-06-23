@@ -4,7 +4,6 @@
 
 export type Action = Readonly<{
   readonly onError?: OnError;
-  readonly [key: string]: unknown;
 }>;
 export type ActionResult = Readonly<{
   readonly action: string;
@@ -12,27 +11,23 @@ export type ActionResult = Readonly<{
   readonly error?: string;
   readonly interactionLogs?: ReadonlyArray<InteractionLogEntry>;
   readonly status: "success" | "continued" | "returned" | "notExecuted";
-  readonly [key: string]: unknown;
 }>;
 export type ActionSelector = Readonly<{
   readonly state?: "attached" | "visible" | "hidden";
   readonly "type": "css" | "xpath";
   readonly value: string;
-  readonly [key: string]: unknown;
 }>;
 export type ActionSequence = ReadonlyArray<Click | DoubleClick | Evaluate | Goto | Hide | Hover | Interaction | KeyPress | Reload | ScrollBottom | ScrollTo | SearchKeyword | Select | SetLocation | Type | WaitForNavigation | WaitForRequest | WaitForResponse | WaitForSelector | WaitForTimeout>;
 export type ActionTimeout = number;
 export type AdditionalProperty = Readonly<{
   readonly name: string;
   readonly value?: string;
-  readonly [key: string]: unknown;
 }>;
 export type Article = Readonly<{
   readonly articleBody?: string;
   readonly articleBodyHtml?: string;
   readonly audios?: ReadonlyArray<Readonly<{
   readonly url: string;
-  readonly [key: string]: unknown;
 }>>;
   readonly authors?: ReadonlyArray<Author>;
   readonly breadcrumbs?: ReadonlyArray<Breadcrumb>;
@@ -50,9 +45,7 @@ export type Article = Readonly<{
   readonly url: string;
   readonly videos?: ReadonlyArray<Readonly<{
   readonly url: string;
-  readonly [key: string]: unknown;
 }>>;
-  readonly [key: string]: unknown;
 }>;
 export type ArticleList = Readonly<{
   readonly articles?: ReadonlyArray<Readonly<{
@@ -66,11 +59,9 @@ export type ArticleList = Readonly<{
   readonly mainImage?: Image;
   readonly metadata: MetadataListItem;
   readonly url?: string;
-  readonly [key: string]: unknown;
 }>>;
   readonly metadata: MetadataList;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>;
 export type ArticleNavigation = Readonly<{
   readonly items?: ReadonlyArray<Readonly<{
@@ -79,24 +70,20 @@ export type ArticleNavigation = Readonly<{
   readonly metadata: MetadataListItem;
   readonly name?: string;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>>;
   readonly metadata: MetadataList;
   readonly nextPage?: PaginationNext;
   readonly pageNumber?: PageNumber;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>;
 export type Author = Readonly<{
   readonly name: string;
   readonly nameRaw?: string;
-  readonly [key: string]: unknown;
 }>;
 export type Availability = "InStock" | "OutOfStock";
 export type Breadcrumb = Readonly<{
   readonly name?: string;
   readonly url?: string;
-  readonly [key: string]: unknown;
 }>;
 export type CanonicalUrl = string;
 export type CapturedResponse = Readonly<{
@@ -106,18 +93,15 @@ export type CapturedResponse = Readonly<{
   readonly interceptionStatus?: Readonly<{
   readonly error?: string;
   readonly status?: "success" | "error";
-  readonly [key: string]: unknown;
 }>;
   readonly request?: Readonly<{
   readonly body?: string;
   readonly headers?: Readonly<Record<string, unknown>>;
   readonly method?: string;
   readonly url?: string;
-  readonly [key: string]: unknown;
 }>;
   readonly statusCode?: number;
   readonly url?: string;
-  readonly [key: string]: unknown;
 }>;
 export type Color = string;
 export type Cookie = Readonly<{
@@ -129,7 +113,6 @@ export type Cookie = Readonly<{
   readonly sameSite?: "Strict" | "Lax" | "Extended" | "None";
   readonly secure?: boolean;
   readonly value: string;
-  readonly [key: string]: unknown;
 }>;
 export type CountryCode = "AW" | "AF" | "AO" | "AI" | "AX" | "AL" | "AD" | "AE" | "AR" | "AM" | "AS" | "AQ" | "TF" | "AG" | "AU" | "AT" | "AZ" | "BI" | "BE" | "BJ" | "BQ" | "BF" | "BD" | "BG" | "BH" | "BS" | "BA" | "BL" | "BY" | "BZ" | "BM" | "BO" | "BR" | "BB" | "BN" | "BT" | "BV" | "BW" | "CF" | "CA" | "CC" | "CH" | "CL" | "CN" | "CI" | "CM" | "CD" | "CG" | "CK" | "CO" | "KM" | "CV" | "CR" | "CU" | "CW" | "CX" | "KY" | "CY" | "CZ" | "DE" | "DJ" | "DM" | "DK" | "DO" | "DZ" | "EC" | "EG" | "ER" | "EH" | "ES" | "EE" | "ET" | "FI" | "FJ" | "FK" | "FR" | "FO" | "FM" | "GA" | "GB" | "GE" | "GG" | "GH" | "GI" | "GN" | "GP" | "GM" | "GW" | "GQ" | "GR" | "GD" | "GL" | "GT" | "GF" | "GU" | "GY" | "HK" | "HM" | "HN" | "HR" | "HT" | "HU" | "ID" | "IM" | "IN" | "IO" | "IE" | "IR" | "IQ" | "IS" | "IL" | "IT" | "JM" | "JE" | "JO" | "JP" | "KZ" | "KE" | "KG" | "KH" | "KI" | "KN" | "KR" | "KW" | "LA" | "LB" | "LR" | "LY" | "LC" | "LI" | "LK" | "LS" | "LT" | "LU" | "LV" | "MO" | "MF" | "MA" | "MC" | "MD" | "MG" | "MV" | "MX" | "MH" | "MK" | "ML" | "MT" | "MM" | "ME" | "MN" | "MP" | "MZ" | "MR" | "MS" | "MQ" | "MU" | "MW" | "MY" | "YT" | "NA" | "NC" | "NE" | "NF" | "NG" | "NI" | "NU" | "NL" | "NO" | "NP" | "NR" | "NZ" | "OM" | "PK" | "PA" | "PN" | "PE" | "PH" | "PW" | "PG" | "PL" | "PR" | "KP" | "PT" | "PY" | "PS" | "PF" | "QA" | "RE" | "RO" | "RU" | "RW" | "SA" | "SD" | "SN" | "SG" | "GS" | "SH" | "SJ" | "SB" | "SL" | "SV" | "SM" | "SO" | "PM" | "RS" | "SS" | "ST" | "SR" | "SK" | "SI" | "SE" | "SZ" | "SX" | "SC" | "SY" | "TC" | "TD" | "TG" | "TH" | "TJ" | "TK" | "TM" | "TL" | "TO" | "TT" | "TN" | "TR" | "TV" | "TW" | "TZ" | "UG" | "UA" | "UM" | "UY" | "US" | "UZ" | "VA" | "VC" | "VE" | "VG" | "VI" | "VN" | "VU" | "WF" | "WS" | "YE" | "ZA" | "ZM" | "ZW";
 export type Currency = string;
@@ -137,28 +120,23 @@ export type CurrencyRaw = string;
 export type CustomAttribute = Readonly<{
   readonly description?: string;
   readonly "type"?: "boolean" | "string" | "number" | "integer" | "array" | "object";
-  readonly [key: string]: unknown;
 }>;
 export type CustomAttributeArray = CustomAttribute;
 export type CustomAttributeBoolean = CustomAttribute;
 export type CustomAttributeInteger = CustomAttribute & Readonly<{
   readonly "enum"?: ReadonlyArray<number>;
-  readonly [key: string]: unknown;
 }>;
 export type CustomAttributeNumber = CustomAttribute & Readonly<{
   readonly "enum"?: ReadonlyArray<number>;
-  readonly [key: string]: unknown;
 }>;
 export type CustomAttributeObject = CustomAttribute;
 export type CustomAttributeString = CustomAttribute & (Readonly<{
   readonly "enum"?: ReadonlyArray<string>;
   readonly format?: "html" | "uri" | "html-text" | "xpath";
-  readonly [key: string]: unknown;
 }>);
 export type CustomHttpRequestHeader = Readonly<{
   readonly name?: string;
   readonly value?: string;
-  readonly [key: string]: unknown;
 }>;
 export type DateDownloaded = string;
 export type ExtractRequest = Readonly<{
@@ -176,7 +154,6 @@ export type ExtractRequest = Readonly<{
   readonly maxInputTokens?: number;
   readonly maxOutputTokens?: number;
   readonly method?: "generate" | "extract";
-  readonly [key: string]: unknown;
 }>;
   readonly customHttpRequestHeaders?: ReadonlyArray<CustomHttpRequestHeader>;
   readonly device?: "desktop" | "mobile";
@@ -209,7 +186,6 @@ export type ExtractRequest = Readonly<{
   readonly productOptions?: Readonly<{
   readonly extractFrom?: unknown;
   readonly model?: "2024-02-01" | "2024-09-16";
-  readonly [key: string]: unknown;
 }>;
   readonly requestCookies?: ReadonlyArray<Cookie>;
   readonly requestHeaders?: RequestHeaders;
@@ -227,7 +203,6 @@ export type ExtractRequest = Readonly<{
 }>;
 export type ExtractionOptions = Readonly<{
   readonly extractFrom?: "httpResponseBody" | "browserHtml" | "browserHtmlOnly";
-  readonly [key: string]: unknown;
 }>;
 export type ForbiddenDomainProblem = Problem;
 export type ForumThread = Readonly<{
@@ -239,42 +214,33 @@ export type ForumThread = Readonly<{
   readonly reactions?: Readonly<{
   readonly likes?: number;
   readonly replies?: number;
-  readonly [key: string]: unknown;
 }>;
   readonly text?: string;
-  readonly [key: string]: unknown;
 }>>;
   readonly topic?: Readonly<{
   readonly name: string;
-  readonly [key: string]: unknown;
 }>;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>;
 export type GoToOptions = Readonly<{
   readonly timeout?: number;
   readonly waitUntil?: "load" | "networkidle0" | "domcontentloaded";
-  readonly [key: string]: unknown;
 }>;
 export type Gtin = Readonly<{
   readonly "type": "gtin8" | "gtin13" | "gtin14" | "isbn10" | "isbn13" | "ismn" | "issn" | "upc";
   readonly value: string;
-  readonly [key: string]: unknown;
 }>;
 export type HTTPHeader = Readonly<{
   readonly name: string;
   readonly value: string;
-  readonly [key: string]: unknown;
 }>;
 export type Image = Readonly<{
   readonly url: string;
-  readonly [key: string]: unknown;
 }>;
 export type InteractionLogEntry = Readonly<{
   readonly level?: "debug" | "info" | "warning" | "error" | "warn";
   readonly message?: string;
   readonly time?: string;
-  readonly [key: string]: unknown;
 }>;
 export type JobPosting = Readonly<{
   readonly baseSalary?: Readonly<{
@@ -282,7 +248,6 @@ export type JobPosting = Readonly<{
   readonly currencyRaw?: string;
   readonly raw?: string;
   readonly valueMax?: string;
-  readonly [key: string]: unknown;
 }>;
   readonly datePublished?: string;
   readonly datePublishedRaw?: string;
@@ -291,52 +256,43 @@ export type JobPosting = Readonly<{
   readonly employmentType?: string;
   readonly hiringOrganization?: Readonly<{
   readonly name: string;
-  readonly [key: string]: unknown;
 }>;
   readonly jobLocation?: Readonly<{
   readonly raw: string;
-  readonly [key: string]: unknown;
 }>;
   readonly jobTitle?: string;
   readonly metadata: SchemasMetadata;
   readonly url: string;
   readonly validThrough?: string;
-  readonly [key: string]: unknown;
 }>;
 export type JobPostingNavigation = Readonly<{
   readonly items?: ReadonlyArray<Readonly<{
   readonly metadata: MetadataListItem;
   readonly name?: string;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>>;
   readonly metadata: MetadataList;
   readonly nextPage?: PaginationNext;
   readonly pageNumber?: PageNumber;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>;
 export type Metadata = Readonly<{
   readonly dateDownloaded?: string;
   readonly displayedQuery?: string;
   readonly searchedQuery?: string;
   readonly totalOrganicResults?: number;
-  readonly [key: string]: unknown;
 }>;
 export type MetadataList = Readonly<{
   readonly dateDownloaded: DateDownloaded;
-  readonly [key: string]: unknown;
 }>;
 export type MetadataListItem = Readonly<{
   readonly probability: number;
-  readonly [key: string]: unknown;
 }>;
 export type Mpn = string;
 export type Name = string;
 export type NetworkCaptureFilter = Readonly<{
   readonly filterType: "url" | "resourceType";
   readonly httpResponseBody?: boolean;
-  readonly [key: string]: unknown;
 }>;
 export type NetworkCaptureFilterSequence = ReadonlyArray<NetworkCaptureFilter>;
 export type OrganicResult = Readonly<{
@@ -344,7 +300,6 @@ export type OrganicResult = Readonly<{
   readonly name?: string;
   readonly rank?: number;
   readonly url?: OrganicResultURL;
-  readonly [key: string]: unknown;
 }>;
 export type OrganicResultURL = string;
 export type PageContent = Readonly<{
@@ -357,33 +312,27 @@ export type PageContent = Readonly<{
   readonly navigationFooter?: ReadonlyArray<Readonly<{
   readonly name?: string;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>>;
   readonly navigationHeader?: ReadonlyArray<Readonly<{
   readonly name?: string;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>>;
   readonly navigationSidebar?: ReadonlyArray<Readonly<{
   readonly name?: string;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>>;
   readonly nextPage?: PaginationNext;
   readonly pagination?: ReadonlyArray<Readonly<{
   readonly name?: string;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>>;
   readonly title?: string;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>;
 export type PageNumber = number;
 export type PaginationNext = Readonly<{
   readonly name?: string;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>;
 export type PatternMatchingOptions = "startsWith" | "endsWith" | "contains" | "exact";
 export type PostalAddress = Readonly<{
@@ -391,7 +340,6 @@ export type PostalAddress = Readonly<{
   readonly addressRegion?: string;
   readonly postalCode?: string;
   readonly streetAddress?: string;
-  readonly [key: string]: unknown;
 }>;
 export type Price = string;
 export type Problem = Readonly<{
@@ -399,7 +347,6 @@ export type Problem = Readonly<{
   readonly status?: number;
   readonly title?: string;
   readonly "type"?: string;
-  readonly [key: string]: unknown;
 }>;
 export type Product = Readonly<{
   readonly additionalProperties?: ReadonlyArray<AdditionalProperty>;
@@ -407,12 +354,10 @@ export type Product = Readonly<{
   readonly bestRating?: number;
   readonly ratingValue?: number;
   readonly reviewCount?: number;
-  readonly [key: string]: unknown;
 }>;
   readonly availability?: Availability;
   readonly brand?: Readonly<{
   readonly name: string;
-  readonly [key: string]: unknown;
 }>;
   readonly breadcrumbs?: ReadonlyArray<Breadcrumb>;
   readonly canonicalUrl?: CanonicalUrl;
@@ -453,10 +398,8 @@ export type Product = Readonly<{
   readonly sku?: Sku;
   readonly style?: Style;
   readonly url?: Url;
-  readonly [key: string]: unknown;
 }>>;
   readonly weight?: Weight;
-  readonly [key: string]: unknown;
 }>;
 export type ProductList = Readonly<{
   readonly breadcrumbs?: ReadonlyArray<Breadcrumb>;
@@ -471,10 +414,8 @@ export type ProductList = Readonly<{
   readonly price?: Price;
   readonly regularPrice?: RegularPrice;
   readonly url?: string;
-  readonly [key: string]: unknown;
 }>>;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>;
 export type ProductNavigation = Readonly<{
   readonly categoryName?: string;
@@ -482,7 +423,6 @@ export type ProductNavigation = Readonly<{
   readonly metadata: MetadataListItem;
   readonly name?: string;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>>;
   readonly metadata: MetadataList;
   readonly nextPage?: PaginationNext;
@@ -491,19 +431,15 @@ export type ProductNavigation = Readonly<{
   readonly metadata: MetadataListItem;
   readonly name?: string;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>>;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>;
 export type RegularPrice = string;
 export type RequestHeaders = Readonly<{
   readonly referer?: string;
-  readonly [key: string]: unknown;
 }>;
 export type ResourceTypeFilter = NetworkCaptureFilter & (Readonly<{
   readonly resourceType?: "document" | "xhr";
-  readonly [key: string]: unknown;
 }>) & unknown;
 export type Response200 = Readonly<{
   readonly actions?: ReadonlyArray<ActionResult>;
@@ -520,10 +456,8 @@ export type Response200 = Readonly<{
   readonly outputTokens?: number;
   readonly textInputTokens?: number;
   readonly textInputTokensBeforeTruncation?: number;
-  readonly [key: string]: unknown;
 }>;
   readonly values?: Readonly<Record<string, unknown>>;
-  readonly [key: string]: unknown;
 }>;
   readonly echoData?: Readonly<Record<string, unknown>>;
   readonly forumThread?: ForumThread & unknown;
@@ -543,12 +477,10 @@ export type Response200 = Readonly<{
   readonly session?: Session;
   readonly statusCode?: number;
   readonly url: string;
-  readonly [key: string]: unknown;
 }>;
 export type ScreenshotOptions = Readonly<{
   readonly format?: "png" | "jpeg";
   readonly fullPage?: boolean;
-  readonly [key: string]: unknown;
 }>;
 export type SearchResultsPage = Readonly<{
   readonly metadata?: Metadata;
@@ -556,26 +488,21 @@ export type SearchResultsPage = Readonly<{
   readonly pageNumber?: number;
   readonly product?: Product;
   readonly url?: SearchURL;
-  readonly [key: string]: unknown;
 }>;
 export type SearchURL = string;
 export type SerpOptions = Readonly<{
   readonly extractFrom?: "browserHtml" | "httpResponseBody";
-  readonly [key: string]: unknown;
 }>;
 export type Session = Readonly<{
   readonly id?: string;
-  readonly [key: string]: unknown;
 }>;
 export type SessionContext = ReadonlyArray<Readonly<{
   readonly name: string;
   readonly value: string;
-  readonly [key: string]: unknown;
 }>>;
 export type SessionContextActionSequence = ReadonlyArray<Click | DoubleClick | Evaluate | Goto | Hide | Hover | Interaction | KeyPress | Reload | ScrollBottom | ScrollTo | SearchKeyword | Select | SetLocation | Type | WaitForNavigation | WaitForRequest | WaitForResponse | WaitForSelector | WaitForTimeout>;
 export type SessionContextParameters = Readonly<{
   readonly actions?: SessionContextActionSequence;
-  readonly [key: string]: unknown;
 }>;
 export type Size = string;
 export type Sku = string;
@@ -585,19 +512,16 @@ export type Url = string;
 export type UrlFilter = NetworkCaptureFilter & Readonly<{
   readonly matchType?: PatternMatchingOptions;
   readonly value?: string;
-  readonly [key: string]: unknown;
 }> & unknown;
 export type UrlPattern = string;
 export type Viewport = Readonly<{
   readonly height?: number;
   readonly width?: number;
-  readonly [key: string]: unknown;
 }>;
 export type Weight = Readonly<{
   readonly rawUnit?: string;
   readonly unit?: string;
   readonly value?: number;
-  readonly [key: string]: unknown;
 }>;
 export type Click = (Readonly<{
   readonly action: "click";
@@ -605,55 +529,45 @@ export type Click = (Readonly<{
   readonly delay?: number;
   readonly selector: ActionSelector;
   readonly waitForNavigationTimeout?: number;
-  readonly [key: string]: unknown;
 }>) & Action;
 export type DoubleClick = Readonly<{
   readonly action: "doubleClick";
   readonly selector: ActionSelector;
-  readonly [key: string]: unknown;
 }> & Action;
 export type Evaluate = Readonly<{
   readonly action: "evaluate";
   readonly source: string;
-  readonly [key: string]: unknown;
 }> & Action;
 export type Goto = Readonly<{
   readonly action: "goto";
   readonly options?: GoToOptions;
   readonly url: string;
-  readonly [key: string]: unknown;
 }> & Action;
 export type Hide = Readonly<{
   readonly action: "hide";
   readonly selector: ActionSelector;
-  readonly [key: string]: unknown;
 }> & Action;
 export type Hover = Readonly<{
   readonly action: "hover";
   readonly selector: ActionSelector;
-  readonly [key: string]: unknown;
 }> & Action;
 export type Interaction = Readonly<{
   readonly action: "interaction";
   readonly args?: Readonly<Record<string, unknown>>;
   readonly id: string;
-  readonly [key: string]: unknown;
 }> & Action;
 export type KeyPress = Readonly<{
   readonly action: "keyPress";
   readonly key: string;
-  readonly [key: string]: unknown;
 }> & Action;
 export type OnError = "continue" | "return";
 export type Reload = Readonly<{
   readonly action: "reload";
   readonly options?: GoToOptions;
-  readonly [key: string]: unknown;
 }> & Action;
 export type SchemasMetadata = Readonly<{
   readonly dateDownloaded: DateDownloaded;
   readonly probability: number;
-  readonly [key: string]: unknown;
 }>;
 export type ScrollBottom = Readonly<{
   readonly action: "scrollBottom";
@@ -662,68 +576,57 @@ export type ScrollBottom = Readonly<{
   readonly maxScrollDelay?: number;
   readonly scrollStep?: number;
   readonly timeout?: number;
-  readonly [key: string]: unknown;
 }> & Action;
 export type ScrollTo = (Readonly<{
   readonly action: "scrollTo";
   readonly left?: number;
   readonly selector?: ActionSelector & unknown;
   readonly top?: number;
-  readonly [key: string]: unknown;
 }>) & Action;
 export type SearchKeyword = Readonly<{
   readonly action: "searchKeyword";
   readonly keyword: string;
-  readonly [key: string]: unknown;
 }> & Action;
 export type Select = Readonly<{
   readonly action: "select";
   readonly selector: ActionSelector;
   readonly values: ReadonlyArray<string>;
-  readonly [key: string]: unknown;
 }> & Action;
 export type SetLocation = Readonly<{
   readonly action: "setLocation";
   readonly address?: PostalAddress;
-  readonly [key: string]: unknown;
 }> & Action;
 export type Type = Readonly<{
   readonly action: "type";
   readonly delay?: number;
   readonly selector: ActionSelector;
   readonly text: string;
-  readonly [key: string]: unknown;
 }> & Action;
 export type WaitForNavigation = (Readonly<{
   readonly action: "waitForNavigation";
   readonly timeout: number;
   readonly waitUntil?: "load" | "domcontentloaded" | "networkidle0";
-  readonly [key: string]: unknown;
 }>) & Action;
 export type WaitForRequest = Readonly<{
   readonly action: "waitForRequest";
   readonly timeout?: ActionTimeout;
   readonly urlMatchingOptions?: PatternMatchingOptions;
   readonly urlPattern: UrlPattern;
-  readonly [key: string]: unknown;
 }> & Action;
 export type WaitForResponse = Readonly<{
   readonly action: "waitForResponse";
   readonly timeout?: ActionTimeout;
   readonly urlMatchingOptions?: PatternMatchingOptions;
   readonly urlPattern: UrlPattern;
-  readonly [key: string]: unknown;
 }> & Action;
 export type WaitForSelector = Readonly<{
   readonly action: "waitForSelector";
   readonly selector: ActionSelector;
   readonly timeout?: ActionTimeout;
-  readonly [key: string]: unknown;
 }> & Action;
 export type WaitForTimeout = Readonly<{
   readonly action: "waitForTimeout";
   readonly timeout?: ActionTimeout;
-  readonly [key: string]: unknown;
 }> & Action;
 
 export type ComponentSchemas = Readonly<{

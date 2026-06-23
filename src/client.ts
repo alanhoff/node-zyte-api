@@ -11,7 +11,7 @@ import { createBasicAuthHeader, type HeaderInit, mergeHeaders } from "./utils.ts
 
 const DEFAULT_BASE_URL = "https://api.zyte.com/v1/";
 const DEFAULT_ENDPOINT = "extract";
-const DEFAULT_USER_AGENT = "zyte-api/0.1.0";
+const DEFAULT_USER_AGENT = "zyte-api/0.3.0";
 
 export type ZyteClientOptions = Readonly<{
   apiKey: string;

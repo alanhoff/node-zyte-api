@@ -85,6 +85,11 @@ Zyte Basic authentication is configured automatically with the API key as userna
 ### `client.extract(request, options?)`
 
 Sends a typed Zyte `/extract` request and returns a typed response.
+The exported `ExtractRequest` and `ExtractResponse` types are generated as strict
+schema-shaped TypeScript types: schema-defined objects reject unknown keys at
+compile time, while fields that the Zyte API models as free-form data (for
+example `echoData`, custom attribute values, and header maps) remain typed as
+`unknown` or records.
 
 ```ts
 const product = await client.extract({
